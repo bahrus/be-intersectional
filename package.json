@@ -11,6 +11,11 @@
     "type": "git",
     "url": "git+https://github.com/bahrus/be-intersectional.git"
   },
+  "dependencies": {
+    "trans-render": "0.0.427",
+    "be-decorated": "0.0.33",
+    "be-hive": "0.0.8"
+  },
   "devDependencies": {
     "xtal-test": "0.0.51"
   },

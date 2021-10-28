@@ -9,35 +9,22 @@
 </head>
 
 <body>
-    <div style="background-color: red; height:4000px"></div>
-    <template id=myTemplate style="display:inline-block">hello</template>
-    <script>
-        function createObserver() {
-            let observer;
+    <template be-intersectional>
+        <div>I am here</div>
+    </template>
 
-            let options = {
-                root: null,
-                rootMargin: "0px",
-                threshold: 0
-            };
-
-            observer = new IntersectionObserver(handleIntersect, options);
-            observer.observe(myTemplate);
+    <script type=importmap>
+        {
+            "imports": {
+                "trans-render/": "../node_modules/trans-render/",
+                "xtal-element/": "../node_modules/xtal-element/",
+                "be-decorated/": "../node_modules/be-decorated/",
+                "be-hive/":  "../node_modules/be-hive/"
+            }
         }
-
-        function handleIntersect(entries, observer) {
-            entries.forEach((entry) => {
-                // if (entry.intersectionRatio > prevRatio) {
-                //     entry.target.style.backgroundColor = increasingColor.replace("ratio", entry.intersectionRatio);
-                // } else {
-                //     entry.target.style.backgroundColor = decreasingColor.replace("ratio", entry.intersectionRatio);
-                // }
-
-                // prevRatio = entry.intersectionRatio;
-                console.log(entry);
-            });
-        }
-        createObserver();
+    </script>
+    <script type=module>
+        import '../be-intersectional.js';
     </script>
 </body>
 
