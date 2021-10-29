@@ -5,15 +5,13 @@ import {register} from 'be-hive/register.js';
 
 export class BeIntersectional implements BeIntersectionalActions{
     intro(proxy: Element & BeIntersectionalProps, target: HTMLTemplateElement, beDecorProps: BeDecoratedProps){
-        let observer;
-
-        let options = {
+        const options = {
             root: null,
             rootMargin: "0px",
             threshold: 0
-        };
+        } as IntersectionObserverInit;
         target.style.display = 'inline-block'
-        observer = new IntersectionObserver((entries: IntersectionObserverEntry[], observer: IntersectionObserver) => {
+        const observer = new IntersectionObserver((entries: IntersectionObserverEntry[], observer: IntersectionObserver) => {
             for(const entry of entries){
                 if(entry.isIntersecting){
                     if(target.nextElementSibling === null){
