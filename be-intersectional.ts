@@ -10,7 +10,7 @@ export class BeIntersectional implements BeIntersectionalActions{
             rootMargin: "0px",
             threshold: 0
         } as IntersectionObserverInit;
-        target.style.display = 'inline-block'
+        //target.style.display = 'inline-block'
         const observer = new IntersectionObserver((entries: IntersectionObserverEntry[], observer: IntersectionObserver) => {
             for(const entry of entries){
                 if(entry.isIntersecting){
@@ -23,7 +23,10 @@ export class BeIntersectional implements BeIntersectionalActions{
                 }
             }
         }, options);
-        observer.observe(target);
+        setTimeout(() => {
+            observer.observe(target);
+        }, 50);
+        
     }
 }
 

@@ -8,7 +8,7 @@ export class BeIntersectional {
             rootMargin: "0px",
             threshold: 0
         };
-        target.style.display = 'inline-block';
+        //target.style.display = 'inline-block'
         const observer = new IntersectionObserver((entries, observer) => {
             for (const entry of entries) {
                 if (entry.isIntersecting) {
@@ -22,7 +22,9 @@ export class BeIntersectional {
                 }
             }
         }, options);
-        observer.observe(target);
+        setTimeout(() => {
+            observer.observe(target);
+        }, 50);
     }
 }
 const tagName = 'be-intersectional';

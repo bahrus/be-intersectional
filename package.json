@@ -12,12 +12,12 @@
     "url": "git+https://github.com/bahrus/be-intersectional.git"
   },
   "dependencies": {
-    "trans-render": "0.0.427",
-    "be-decorated": "0.0.33",
-    "be-hive": "0.0.8"
+    "trans-render": "0.0.433",
+    "be-decorated": "0.0.44",
+    "be-hive": "0.0.13"
   },
   "devDependencies": {
-    "xtal-test": "0.0.51"
+    "xtal-test": "0.0.54"
   },
   "author": "",
   "license": "MIT",
