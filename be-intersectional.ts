@@ -14,12 +14,17 @@ export class BeIntersectional implements BeIntersectionalActions{
         const observer = new IntersectionObserver((entries: IntersectionObserverEntry[], observer: IntersectionObserver) => {
             for(const entry of entries){
                 if(entry.isIntersecting){
+                    target.dataset.intersecting = 'true';
                     if(target.nextElementSibling === null){
                         target.parentElement!.appendChild(target.content.cloneNode(true));
                     }else{
                         insertAdjacentTemplate(target, target, 'afterend');
                     }
-                    target.remove();
+                    setTimeout(() => {
+                        target.remove();
+                    }, 50);
+                }else{
+                    target.dataset.intersecting = 'false';
                 }
             }
         }, options);
@@ -29,6 +34,8 @@ export class BeIntersectional implements BeIntersectionalActions{
         
     }
 }
+
+
 
 export interface BeIntersectional extends BeIntersectionalProps{}
 

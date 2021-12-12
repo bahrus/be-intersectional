@@ -12,13 +12,19 @@ export class BeIntersectional {
         const observer = new IntersectionObserver((entries, observer) => {
             for (const entry of entries) {
                 if (entry.isIntersecting) {
+                    target.dataset.intersecting = 'true';
                     if (target.nextElementSibling === null) {
                         target.parentElement.appendChild(target.content.cloneNode(true));
                     }
                     else {
                         insertAdjacentTemplate(target, target, 'afterend');
                     }
-                    target.remove();
+                    setTimeout(() => {
+                        target.remove();
+                    }, 50);
+                }
+                else {
+                    target.dataset.intersecting = 'false';
                 }
             }
         }, options);
