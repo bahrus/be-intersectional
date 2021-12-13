@@ -12,6 +12,18 @@ Instantiate template when viewable.
 </template>
 ```
 
+Specify options:
+
+<template be-intersectional='{
+    "options":{
+        "threshold": 0.5,
+        "rootMargin": "0px 0px -100px 0px"
+    }
+
+}'>
+    <div>I am here</div>
+</template>
+
 Use Case II [TODO]
 
 Add class when viewable
@@ -20,3 +32,4 @@ Add class when viewable
 <div be-intersectional=my-class>
 </div>
 ```
+

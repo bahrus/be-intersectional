@@ -4,35 +4,46 @@ import {BeIntersectionalActions, BeIntersectionalProps} from './types';
 import {register} from 'be-hive/register.js';
 
 export class BeIntersectional implements BeIntersectionalActions{
-    intro(proxy: Element & BeIntersectionalProps, target: HTMLTemplateElement, beDecorProps: BeDecoratedProps){
-        const options = {
-            root: null,
-            rootMargin: "0px",
-            threshold: 0
-        } as IntersectionObserverInit;
-        //target.style.display = 'inline-block'
+    #observer: IntersectionObserver | undefined;
+    #target!: HTMLTemplateElement;
+
+    intro(proxy: HTMLTemplateElement & BeIntersectionalProps, target: HTMLTemplateElement, beDecorProps: BeDecoratedProps): void{
+        this.#target = target;
+    }
+
+    onOptions({options}: this): void {
+        const target = this.#target;
         const observer = new IntersectionObserver((entries: IntersectionObserverEntry[], observer: IntersectionObserver) => {
+            
             for(const entry of entries){
                 if(entry.isIntersecting){
-                    target.dataset.intersecting = 'true';
+                    const clone = target.content.cloneNode(true);
                     if(target.nextElementSibling === null){
-                        target.parentElement!.appendChild(target.content.cloneNode(true));
+                        target.parentElement!.appendChild(clone);
                     }else{
                         insertAdjacentTemplate(target, target, 'afterend');
                     }
-                    setTimeout(() => {
-                        target.remove();
-                    }, 50);
+                    target.remove();
                 }else{
-                    target.dataset.intersecting = 'false';
                 }
             }
         }, options);
         setTimeout(() => {
             observer.observe(target);
-        }, 50);
-        
+        }, 50); 
     }
+
+    finale(proxy: Element & BeIntersectionalProps, target: HTMLTemplateElement, beDecorProps: BeDecoratedProps){
+        this.disconnect(this);
+    }
+
+    disconnect({}: this){
+        if(this.#observer){
+            this.#observer.disconnect();
+        }
+    }
+
+
 }
 
 
@@ -52,8 +63,14 @@ define<BeIntersectionalProps & BeDecoratedProps<BeIntersectionalProps, BeInterse
             upgrade,
             ifWantsToBe,
             forceVisible: true,
-            virtualProps: [],
-            intro: 'intro'
+            virtualProps: ['options'],
+            finale: 'finale',
+            proxyPropDefaults:{
+                options: {
+                    threshold: 0,
+                    rootMargin: '0px'
+                }
+            }
         },
         actions:{
 

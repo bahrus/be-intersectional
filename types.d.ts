@@ -1,8 +1,18 @@
 import {BeDecoratedProps} from 'be-decorated/types';
-export interface BeIntersectionalProps{
+
+export interface BeIntersectionalVirtualProps{
+    options: IntersectionObserverInit;
 
 }
 
+export interface BeIntersectionalProps extends BeIntersectionalVirtualProps{
+    proxy: HTMLTemplateElement & BeIntersectionalVirtualProps;
+}
+
 export interface BeIntersectionalActions{
-    intro(proxy: Element & BeIntersectionalProps, target: HTMLTemplateElement, beDecorProps: BeDecoratedProps): void;
+    intro(proxy: HTMLTemplateElement & BeIntersectionalProps, target: HTMLTemplateElement, beDecorProps: BeDecoratedProps): void;
+
+    onOptions(self: this): void;
+
+    finale(proxy: HTMLTemplateElement & BeIntersectionalProps, target: HTMLTemplateElement, beDecorProps: BeDecoratedProps): void;
 }
