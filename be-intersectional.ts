@@ -12,6 +12,7 @@ export class BeIntersectional implements BeIntersectionalActions{
     }
 
     onOptions({options}: this): void {
+        this.disconnect(this);
         const target = this.#target;
         const observer = new IntersectionObserver((entries: IntersectionObserverEntry[], observer: IntersectionObserver) => {
             
@@ -64,7 +65,13 @@ define<BeIntersectionalProps & BeDecoratedProps<BeIntersectionalProps, BeInterse
             ifWantsToBe,
             forceVisible: true,
             virtualProps: ['options'],
+            intro: 'intro',
             finale: 'finale',
+            actions: {
+                'onOptions': {
+                    ifAllOf: ['options'],
+                }
+            },
             proxyPropDefaults:{
                 options: {
                     threshold: 0,

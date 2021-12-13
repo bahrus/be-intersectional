@@ -8,6 +8,7 @@ export class BeIntersectional {
         this.#target = target;
     }
     onOptions({ options }) {
+        this.disconnect(this);
         const target = this.#target;
         const observer = new IntersectionObserver((entries, observer) => {
             for (const entry of entries) {
@@ -49,7 +50,13 @@ define({
             ifWantsToBe,
             forceVisible: true,
             virtualProps: ['options'],
+            intro: 'intro',
             finale: 'finale',
+            actions: {
+                'onOptions': {
+                    ifAllOf: ['options'],
+                }
+            },
             proxyPropDefaults: {
                 options: {
                     threshold: 0,
