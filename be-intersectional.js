@@ -48,7 +48,7 @@ define({
         propDefaults: {
             upgrade,
             ifWantsToBe,
-            forceVisible: true,
+            forceVisible: [upgrade],
             virtualProps: ['options'],
             intro: 'intro',
             finale: 'finale',
