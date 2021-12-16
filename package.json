@@ -2,22 +2,40 @@
   "name": "be-intersectional",
   "version": "0.0.5",
   "description": "",
-  "main": "index.js",
+  "main": "be-intersectional.js",
+  "module": "be-intersectional.js",
+  "keywords": [
+    "web-components",
+    "web-component",
+    "custom-element",
+    "custom-elements"
+  ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "serve": "node node_modules/xtal-test/serve.js"
+    "serve": "node node_modules/xtal-test/serve.js",
+    "package-check": "package-check"
   },
+  "files": [
+    "*.*"
+  ],
+  "exports": {
+    ".": "./be-intersectional.js",
+    "./be-intersectional.js": "./be-intersectional.js"
+  },
+  "types": "types.d.ts",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/bahrus/be-intersectional.git"
   },
   "dependencies": {
     "trans-render": "0.0.433",
-    "be-decorated": "0.0.44",
+    "be-decorated": "0.0.51",
     "be-hive": "0.0.13"
   },
   "devDependencies": {
-    "xtal-test": "0.0.54"
+    "xtal-test": "0.0.54",
+    "@skypack/package-check": "0.2.2",
+    "@custom-elements-manifest/analyzer": "0.5.7"
   },
   "author": "",
   "license": "MIT",
