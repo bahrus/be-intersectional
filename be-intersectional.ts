@@ -25,7 +25,6 @@ export class BeIntersectional implements BeIntersectionalActions{
                         insertAdjacentTemplate(target, target, 'afterend');
                     }
                     target.remove();
-                }else{
                 }
             }
         }, options);

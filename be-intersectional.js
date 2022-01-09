@@ -22,8 +22,6 @@ export class BeIntersectional {
                     }
                     target.remove();
                 }
-                else {
-                }
             }
         }, options);
         setTimeout(() => {

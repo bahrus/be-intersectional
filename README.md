@@ -7,10 +7,18 @@ Instantiate template when viewable.
 ## Syntax
 
 ```html
+<style>
+template[be-intersectional], template[is-intersectional]{
+        display:block;
+        height: 100px;
+}
+</style>
 <template be-intersectional>
     <div>I am here</div>
 </template>
 ```
+
+be-intersectional will not work unless a style like shown above is specified.  Height should be the best estimate for how high the template will be when it is instantiated.
 
 Specify options:
 
