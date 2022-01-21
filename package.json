@@ -28,13 +28,13 @@
     "url": "git+https://github.com/bahrus/be-intersectional.git"
   },
   "dependencies": {
-    "trans-render": "0.0.445",
-    "be-decorated": "0.0.62",
-    "be-hive": "0.0.17"
+    "trans-render": "0.0.447",
+    "be-decorated": "0.0.64",
+    "be-hive": "0.0.19"
   },
   "devDependencies": {
     "xtal-test": "0.0.54",
-    "xtal-editor": "0.0.117",
+    "xtal-editor": "0.0.122",
     "@skypack/package-check": "0.2.2",
     "@custom-elements-manifest/analyzer": "0.5.7"
   },
