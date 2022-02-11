@@ -1,6 +1,6 @@
 {
   "name": "be-intersectional",
-  "version": "0.0.13",
+  "version": "0.0.14",
   "description": "",
   "main": "be-intersectional.js",
   "module": "be-intersectional.js",
