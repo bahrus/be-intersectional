@@ -1,4 +1,3 @@
-import { insertAdjacentTemplate } from 'trans-render/lib/insertAdjacentTemplate.js';
 import {define, BeDecoratedProps} from 'be-decorated/be-decorated.js';
 import {BeIntersectionalActions, BeIntersectionalProps} from './types';
 import {register} from 'be-hive/register.js';
@@ -14,7 +13,7 @@ export class BeIntersectional implements BeIntersectionalActions{
     onOptions({options}: this): void {
         this.disconnect(this);
         const target = this.#target;
-        const observer = new IntersectionObserver((entries: IntersectionObserverEntry[], observer: IntersectionObserver) => {
+        const observer = new IntersectionObserver(async (entries: IntersectionObserverEntry[], observer: IntersectionObserver) => {
             
             for(const entry of entries){
                 if(entry.isIntersecting){
@@ -22,6 +21,7 @@ export class BeIntersectional implements BeIntersectionalActions{
                     if(target.nextElementSibling === null){
                         target.parentElement!.appendChild(clone);
                     }else{
+                        const {insertAdjacentTemplate} = await import('trans-render/lib/insertAdjacentTemplate.js');
                         insertAdjacentTemplate(target, target, 'afterend');
                     }
                     target.remove();
