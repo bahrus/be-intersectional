@@ -4,6 +4,7 @@ import {register} from 'be-hive/register.js';
 
 export class BeIntersectional implements BeIntersectionalActions{
     #observer: IntersectionObserver | undefined;
+    #removed: boolean = false;
     #target!: HTMLTemplateElement;
 
     intro(proxy: HTMLTemplateElement & BeIntersectionalProps, target: HTMLTemplateElement, beDecorProps: BeDecoratedProps): void{
@@ -14,6 +15,7 @@ export class BeIntersectional implements BeIntersectionalActions{
         this.disconnect(this);
         const target = this.#target;
         const observer = new IntersectionObserver(async (entries: IntersectionObserverEntry[], observer: IntersectionObserver) => {
+            if(this.#removed) return;
             for(const entry of entries){
                 const intersecting = entry.isIntersecting;
                 proxy.isIntersecting = intersecting;
@@ -37,6 +39,7 @@ export class BeIntersectional implements BeIntersectionalActions{
             insertAdjacentTemplate(target, target, 'afterend');
         }
         setTimeout(() => {
+            this.#removed = true;
             target.remove();
         }, 16);
     }

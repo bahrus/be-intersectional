@@ -2,6 +2,7 @@ import { define } from 'be-decorated/be-decorated.js';
 import { register } from 'be-hive/register.js';
 export class BeIntersectional {
     #observer;
+    #removed = false;
     #target;
     intro(proxy, target, beDecorProps) {
         this.#target = target;
@@ -10,6 +11,8 @@ export class BeIntersectional {
         this.disconnect(this);
         const target = this.#target;
         const observer = new IntersectionObserver(async (entries, observer) => {
+            if (this.#removed)
+                return;
             for (const entry of entries) {
                 const intersecting = entry.isIntersecting;
                 proxy.isIntersecting = intersecting;
@@ -33,6 +36,7 @@ export class BeIntersectional {
             insertAdjacentTemplate(target, target, 'afterend');
         }
         setTimeout(() => {
+            this.#removed = true;
             target.remove();
         }, 16);
     }
