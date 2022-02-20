@@ -6,29 +6,35 @@ export class BeIntersectional {
     intro(proxy, target, beDecorProps) {
         this.#target = target;
     }
-    onOptions({ options }) {
+    onOptions({ options, proxy }) {
         this.disconnect(this);
         const target = this.#target;
         const observer = new IntersectionObserver(async (entries, observer) => {
             for (const entry of entries) {
-                if (entry.isIntersecting) {
-                    const clone = target.content.cloneNode(true);
-                    if (target.nextElementSibling === null) {
-                        target.parentElement.appendChild(clone);
-                    }
-                    else {
-                        const { insertAdjacentTemplate } = await import('trans-render/lib/insertAdjacentTemplate.js');
-                        insertAdjacentTemplate(target, target, 'afterend');
-                    }
-                    setTimeout(() => {
-                        target.remove();
-                    }, 16);
-                }
+                const intersecting = entry.isIntersecting;
+                proxy.isIntersecting = intersecting;
+                setTimeout(() => {
+                    proxy.isIntersectingEcho = intersecting;
+                }, 30); //make configurable?
             }
         }, options);
         setTimeout(() => {
             observer.observe(target);
         }, 50);
+    }
+    async onIntersecting({ isIntersecting, isIntersectingEcho }) {
+        const target = this.#target;
+        const clone = target.content.cloneNode(true);
+        if (target.nextElementSibling === null) {
+            target.parentElement.appendChild(clone);
+        }
+        else {
+            const { insertAdjacentTemplate } = await import('trans-render/lib/insertAdjacentTemplate.js');
+            insertAdjacentTemplate(target, target, 'afterend');
+        }
+        setTimeout(() => {
+            target.remove();
+        }, 16);
     }
     async goPublic({}) {
     }
@@ -55,7 +61,10 @@ define({
             intro: 'intro',
             finale: 'finale',
             actions: {
-                'onOptions': 'options'
+                'onOptions': 'options',
+                'onIntersecting': {
+                    ifAllOf: ['isIntersecting', 'isIntersectingEcho'],
+                }
             },
             proxyPropDefaults: {
                 options: {

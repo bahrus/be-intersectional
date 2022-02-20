@@ -10,30 +10,35 @@ export class BeIntersectional implements BeIntersectionalActions{
         this.#target = target;
     }
 
-    onOptions({options}: this): void {
+    onOptions({options, proxy}: this): void {
         this.disconnect(this);
         const target = this.#target;
         const observer = new IntersectionObserver(async (entries: IntersectionObserverEntry[], observer: IntersectionObserver) => {
-            
             for(const entry of entries){
-                if(entry.isIntersecting){
-                    const clone = target.content.cloneNode(true);
-                    if(target.nextElementSibling === null){
-                        target.parentElement!.appendChild(clone);
-                    }else{
-                        const {insertAdjacentTemplate} = await import('trans-render/lib/insertAdjacentTemplate.js');
-                        insertAdjacentTemplate(target, target, 'afterend');
-                    }
-                    setTimeout(() => {
-                        target.remove();
-                    }, 16);
-                    
-                }
+                const intersecting = entry.isIntersecting;
+                proxy.isIntersecting = intersecting;
+                setTimeout(() => {
+                    proxy.isIntersectingEcho = intersecting;
+                }, 30); //make configurable?
             }
         }, options);
         setTimeout(() => {
             observer.observe(target);
         }, 50); 
+    }
+
+    async onIntersecting({isIntersecting, isIntersectingEcho}: this) {
+        const target = this.#target;
+        const clone = target.content.cloneNode(true);
+        if(target.nextElementSibling === null){
+            target.parentElement!.appendChild(clone);
+        }else{
+            const {insertAdjacentTemplate} = await import('trans-render/lib/insertAdjacentTemplate.js');
+            insertAdjacentTemplate(target, target, 'afterend');
+        }
+        setTimeout(() => {
+            target.remove();
+        }, 16);
     }
 
     async goPublic({}: this){
@@ -74,8 +79,10 @@ define<BeIntersectionalProps & BeDecoratedProps<BeIntersectionalProps, BeInterse
             intro: 'intro',
             finale: 'finale',
             actions: {
-                'onOptions': 'options'
-                
+                'onOptions': 'options',
+                'onIntersecting': {
+                    ifAllOf: ['isIntersecting', 'isIntersectingEcho'],
+                }
             },
             proxyPropDefaults:{
                 options: {

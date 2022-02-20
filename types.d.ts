@@ -15,6 +15,8 @@ export interface BeIntersectionalActions{
 
     onOptions(self: this): void;
 
+    onIntersecting(self: this): void;
+
     goPublic(self: this): Promise<void>;
 
     finale(proxy: HTMLTemplateElement & BeIntersectionalProps, target: HTMLTemplateElement, beDecorProps: BeDecoratedProps): void;
