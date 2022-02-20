@@ -24,10 +24,7 @@ export class BeIntersectional implements BeIntersectionalActions{
                         const {insertAdjacentTemplate} = await import('trans-render/lib/insertAdjacentTemplate.js');
                         insertAdjacentTemplate(target, target, 'afterend');
                     }
-                    setTimeout(() => {
-                        target.remove();
-                    }, 16);
-                    
+                    target.remove();                   
                 }
             }
         }, options);
