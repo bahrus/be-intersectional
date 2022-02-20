@@ -30,6 +30,8 @@ export class BeIntersectional {
             observer.observe(target);
         }, 50);
     }
+    async goPublic({}) {
+    }
     finale(proxy, target, beDecorProps) {
         this.disconnect(this);
     }
@@ -49,13 +51,11 @@ define({
             upgrade,
             ifWantsToBe,
             forceVisible: [upgrade],
-            virtualProps: ['options'],
+            virtualProps: ['options', 'isIntersecting', 'isIntersectingEcho'],
             intro: 'intro',
             finale: 'finale',
             actions: {
-                'onOptions': {
-                    ifAllOf: ['options'],
-                }
+                'onOptions': 'options'
             },
             proxyPropDefaults: {
                 options: {
@@ -64,7 +64,6 @@ define({
                 }
             }
         },
-        actions: {}
     },
     complexPropDefaults: {
         controller: BeIntersectional

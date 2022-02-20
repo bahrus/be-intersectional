@@ -36,6 +36,10 @@ export class BeIntersectional implements BeIntersectionalActions{
         }, 50); 
     }
 
+    async goPublic({}: this){
+
+    }
+
     finale(proxy: Element & BeIntersectionalProps, target: HTMLTemplateElement, beDecorProps: BeDecoratedProps){
         this.disconnect(this);
     }
@@ -66,13 +70,12 @@ define<BeIntersectionalProps & BeDecoratedProps<BeIntersectionalProps, BeInterse
             upgrade,
             ifWantsToBe,
             forceVisible: [upgrade],
-            virtualProps: ['options'],
+            virtualProps: ['options', 'isIntersecting', 'isIntersectingEcho'],
             intro: 'intro',
             finale: 'finale',
             actions: {
-                'onOptions': {
-                    ifAllOf: ['options'],
-                }
+                'onOptions': 'options'
+                
             },
             proxyPropDefaults:{
                 options: {
@@ -81,9 +84,6 @@ define<BeIntersectionalProps & BeDecoratedProps<BeIntersectionalProps, BeInterse
                 }
             }
         },
-        actions:{
-
-        }
     },
     complexPropDefaults: {
         controller: BeIntersectional
