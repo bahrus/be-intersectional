@@ -2,7 +2,7 @@
 
 Use Case I
 
-Instantiate template when viewable.
+Instantiate template when viewable.  Allows for instantiating virtual list.
 
 ## Syntax
 
