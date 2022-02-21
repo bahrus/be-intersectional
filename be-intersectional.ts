@@ -20,7 +20,10 @@ export class BeIntersectional implements BeIntersectionalActions{
                 const intersecting = entry.isIntersecting;
                 proxy.isIntersecting = intersecting;
                 setTimeout(() => {
-                    proxy.isIntersectingEcho = intersecting;
+                    try{
+                        proxy.isIntersectingEcho = intersecting;//sometimes proxy is revoked
+                    }catch(e){}
+                    
                 }, 30); //make configurable?
             }
         }, options);
