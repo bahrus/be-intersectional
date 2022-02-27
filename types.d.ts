@@ -4,6 +4,7 @@ export interface BeIntersectionalVirtualProps{
     options: IntersectionObserverInit;
     isIntersecting: boolean;
     isIntersectingEcho: boolean;
+    archive: boolean;
 }
 
 export interface BeIntersectionalProps extends BeIntersectionalVirtualProps{
@@ -16,6 +17,8 @@ export interface BeIntersectionalActions{
     onOptions(self: this): void;
 
     onIntersecting(self: this): void;
+
+    onNotIntersecting(self: this): void;
 
     goPublic(self: this): Promise<void>;
 

@@ -4,6 +4,7 @@ export class BeIntersectional {
     #observer;
     #removed = false;
     #target;
+    #elements;
     intro(proxy, target, beDecorProps) {
         this.#target = target;
     }
@@ -28,20 +29,42 @@ export class BeIntersectional {
             observer.observe(target);
         }, 50);
     }
-    async onIntersecting({ isIntersecting, isIntersectingEcho }) {
+    async onIntersecting({ isIntersecting, isIntersectingEcho, archive }) {
         const target = this.#target;
         const clone = target.content.cloneNode(true);
         if (target.nextElementSibling === null) {
             target.parentElement.appendChild(clone);
+            if (archive) {
+                let ns = target.nextElementSibling;
+                const refs = [];
+                while (ns !== null) {
+                    refs.push(new WeakRef(ns));
+                    ns = ns.nextElementSibling;
+                }
+                this.#elements = refs;
+            }
         }
         else {
             const { insertAdjacentTemplate } = await import('trans-render/lib/insertAdjacentTemplate.js');
-            insertAdjacentTemplate(target, target, 'afterend');
+            const elements = insertAdjacentTemplate(target, target, 'afterend');
+            if (archive) {
+                this.#elements = elements.map(element => new WeakRef(element));
+            }
         }
-        setTimeout(() => {
-            this.#removed = true;
-            target.remove();
-        }, 16);
+        if (!archive) {
+            setTimeout(() => {
+                this.#removed = true;
+                target.remove();
+            }, 16);
+        }
+    }
+    async onNotIntersecting({}) {
+        if (this.#elements !== undefined) {
+            for (const element of this.#elements) {
+                element.deref()?.remove();
+            }
+            this.#elements = undefined;
+        }
     }
     async goPublic({}) {
     }
@@ -64,20 +87,23 @@ define({
             upgrade,
             ifWantsToBe,
             forceVisible: [upgrade],
-            virtualProps: ['options', 'isIntersecting', 'isIntersectingEcho'],
+            virtualProps: ['options', 'isIntersecting', 'isIntersectingEcho', 'archive'],
             intro: 'intro',
             finale: 'finale',
             actions: {
-                'onOptions': 'options',
-                'onIntersecting': {
+                onOptions: 'options',
+                onIntersecting: {
                     ifAllOf: ['isIntersecting', 'isIntersectingEcho'],
+                },
+                onNotIntersecting: {
+                    ifNoneOf: ['isIntersecting', 'isIntersectingEcho'],
                 }
             },
             proxyPropDefaults: {
                 options: {
                     threshold: 0,
                     rootMargin: '0px'
-                }
+                },
             }
         },
     },
