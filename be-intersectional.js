@@ -51,7 +51,10 @@ export class BeIntersectional {
                 this.#elements = elements.map(element => new WeakRef(element));
             }
         }
-        if (!archive) {
+        if (archive) {
+            target.classList.add('expanded');
+        }
+        else {
             setTimeout(() => {
                 this.#removed = true;
                 target.remove();
@@ -65,6 +68,7 @@ export class BeIntersectional {
             }
             this.#elements = undefined;
         }
+        this.#target.classList.remove('expanded');
     }
     async goPublic({}) {
     }

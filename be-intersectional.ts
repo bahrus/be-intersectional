@@ -57,7 +57,9 @@ export class BeIntersectional implements BeIntersectionalActions{
             }
             
         }
-        if(!archive){
+        if(archive){
+            target.classList.add('expanded');
+        }else{
             setTimeout(() => {
                 this.#removed = true;
                 target.remove();
@@ -73,6 +75,7 @@ export class BeIntersectional implements BeIntersectionalActions{
             }
             this.#elements = undefined;
         }
+        this.#target.classList.remove('expanded');
     }
 
     async goPublic({}: this){
