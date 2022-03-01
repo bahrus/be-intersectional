@@ -29,19 +29,26 @@ export class BeIntersectional {
             observer.observe(target);
         }, primaryDelay);
     }
-    async onIntersecting({ isIntersecting, isIntersectingEcho, archive, exitDelay }) {
+    async onIntersecting({ isIntersecting, isIntersectingEcho, archive, exitDelay, proxy }) {
         const target = this.#target;
         const clone = target.content.cloneNode(true);
         if (target.nextElementSibling === null) {
             target.parentElement.appendChild(clone);
             if (archive) {
                 let ns = target.nextElementSibling;
+                const firstSibling = ns;
+                let lastSibling = ns;
                 const refs = [];
                 while (ns !== null) {
                     refs.push(new WeakRef(ns));
+                    lastSibling = ns;
                     ns = ns.nextElementSibling;
                 }
                 this.#elements = refs;
+                proxy.mounted = {
+                    enterElement: firstSibling,
+                    exitElement: lastSibling,
+                };
             }
         }
         else {
@@ -91,7 +98,7 @@ define({
             upgrade,
             ifWantsToBe,
             forceVisible: [upgrade],
-            virtualProps: ['options', 'isIntersecting', 'isIntersectingEcho', 'archive', 'enterDelay', 'exitDelay'],
+            virtualProps: ['options', 'isIntersecting', 'isIntersectingEcho', 'archive', 'enterDelay', 'exitDelay', 'mounted'],
             intro: 'intro',
             finale: 'finale',
             actions: {
@@ -99,9 +106,9 @@ define({
                 onIntersecting: {
                     ifAllOf: ['isIntersecting', 'isIntersectingEcho'],
                 },
-                onNotIntersecting: {
-                    ifNoneOf: ['isIntersecting', 'isIntersectingEcho'],
-                }
+                // onNotIntersecting: {
+                //     ifNoneOf: ['isIntersecting', 'isIntersectingEcho'],
+                // }
             },
             proxyPropDefaults: {
                 options: {

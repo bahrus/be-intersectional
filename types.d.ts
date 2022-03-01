@@ -7,6 +7,12 @@ export interface BeIntersectionalVirtualProps{
     enterDelay: number;
     exitDelay: number;
     archive: boolean;
+    mounted: Mounted;
+}
+
+export interface Mounted{
+    enterElement: Element;
+    exitElement: Element;
 }
 
 export interface BeIntersectionalProps extends BeIntersectionalVirtualProps{

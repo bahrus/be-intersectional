@@ -33,7 +33,7 @@ export class BeIntersectional implements BeIntersectionalActions{
         }, primaryDelay); 
     }
 
-    async onIntersecting({isIntersecting, isIntersectingEcho, archive, exitDelay}: this) {
+    async onIntersecting({isIntersecting, isIntersectingEcho, archive, exitDelay, proxy}: this) {
         const target = this.#target;
         const clone = target.content.cloneNode(true);
 
@@ -41,12 +41,19 @@ export class BeIntersectional implements BeIntersectionalActions{
             target.parentElement!.appendChild(clone);
             if(archive){
                 let ns = target.nextElementSibling as any as Element | null;
+                const firstSibling = ns;
+                let lastSibling = ns;
                 const refs: WeakRef<Element>[] = [];
                 while(ns !== null){
                     refs.push(new WeakRef(ns));
+                    lastSibling = ns;
                     ns = ns!.nextElementSibling;
                 }
                 this.#elements = refs;
+                proxy.mounted = {
+                    enterElement: firstSibling!,
+                    exitElement: lastSibling!,
+                }
             }
 
         }else{
@@ -112,7 +119,7 @@ define<BeIntersectionalProps & BeDecoratedProps<BeIntersectionalProps, BeInterse
             upgrade,
             ifWantsToBe,
             forceVisible: [upgrade],
-            virtualProps: ['options', 'isIntersecting', 'isIntersectingEcho', 'archive', 'enterDelay', 'exitDelay'],
+            virtualProps: ['options', 'isIntersecting', 'isIntersectingEcho', 'archive', 'enterDelay', 'exitDelay', 'mounted'],
             intro: 'intro',
             finale: 'finale',
             actions: {
@@ -120,9 +127,9 @@ define<BeIntersectionalProps & BeDecoratedProps<BeIntersectionalProps, BeInterse
                 onIntersecting: {
                     ifAllOf: ['isIntersecting', 'isIntersectingEcho'],
                 },
-                onNotIntersecting: {
-                    ifNoneOf: ['isIntersecting', 'isIntersectingEcho'],
-                }
+                // onNotIntersecting: {
+                //     ifNoneOf: ['isIntersecting', 'isIntersectingEcho'],
+                // }
             },
             proxyPropDefaults:{
                 options: {
