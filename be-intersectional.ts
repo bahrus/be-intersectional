@@ -12,10 +12,10 @@ export class BeIntersectional implements BeIntersectionalActions{
         this.#target = target;
     }
 
-    onOptions({options, proxy, enterDelay: primaryDelay}: this): void {
+    onOptions({options, proxy, enterDelay}: this): void {
         this.disconnect(this);
         const target = this.#target;
-        const observer = new IntersectionObserver(async (entries: IntersectionObserverEntry[], observer: IntersectionObserver) => {
+        const observer = new IntersectionObserver((entries: IntersectionObserverEntry[], observer: IntersectionObserver) => {
             if(this.#removed) return;
             for(const entry of entries){
                 const intersecting = entry.isIntersecting;
@@ -25,12 +25,12 @@ export class BeIntersectional implements BeIntersectionalActions{
                         proxy.isIntersectingEcho = intersecting;//sometimes proxy is revoked
                     }catch(e){}
                     
-                }, primaryDelay); 
+                }, enterDelay); 
             }
         }, options);
         setTimeout(() => {
             observer.observe(target);
-        }, primaryDelay); 
+        }, enterDelay); 
     }
 
     async onIntersecting({isIntersecting, isIntersectingEcho, archive, exitDelay, proxy}: this) {
@@ -61,6 +61,10 @@ export class BeIntersectional implements BeIntersectionalActions{
             const elements = insertAdjacentTemplate(target, target, 'afterend');
             if(archive){
                 this.#elements = elements.map(element => new WeakRef(element));
+                proxy.mounted = {
+                    enterElement: elements[0],
+                    exitElement: elements[elements.length - 1],
+                };
             }
             
         }
@@ -87,6 +91,26 @@ export class BeIntersectional implements BeIntersectionalActions{
 
     async goPublic({}: this){
 
+    }
+
+    onMounted({mounted, options, proxy, enterDelay}: this): void {
+        const observer = new IntersectionObserver((entries: IntersectionObserverEntry[], observer: IntersectionObserver) => {
+            for(const entry of entries){
+                const intersecting = entry.isIntersecting;
+                if(entry.target === mounted.enterElement){
+                    proxy.enteringElementNotVisible = !intersecting;
+                }
+                if(entry.target === mounted.exitElement){
+                    proxy.exitingElementNotVisible = !intersecting;
+                }
+            }
+        }, options);
+        proxy.enteringElementNotVisible = false;
+        proxy.exitingElementNotVisible = false;
+        setTimeout(() => {
+            observer.observe(mounted.enterElement);
+            observer.observe(mounted.exitElement);
+        }, enterDelay); 
     }
 
     finale(proxy: Element & BeIntersectionalProps, target: HTMLTemplateElement, beDecorProps: BeDecoratedProps){
@@ -119,7 +143,10 @@ define<BeIntersectionalProps & BeDecoratedProps<BeIntersectionalProps, BeInterse
             upgrade,
             ifWantsToBe,
             forceVisible: [upgrade],
-            virtualProps: ['options', 'isIntersecting', 'isIntersectingEcho', 'archive', 'enterDelay', 'exitDelay', 'mounted'],
+            virtualProps: [
+                'options', 'isIntersecting', 'isIntersectingEcho', 'archive', 'enterDelay', 'exitDelay', 'mounted',
+                'enteringElementNotVisible', 'exitingElementNotVisible',
+            ],
             intro: 'intro',
             finale: 'finale',
             actions: {
@@ -127,9 +154,10 @@ define<BeIntersectionalProps & BeDecoratedProps<BeIntersectionalProps, BeInterse
                 onIntersecting: {
                     ifAllOf: ['isIntersecting', 'isIntersectingEcho'],
                 },
-                // onNotIntersecting: {
-                //     ifNoneOf: ['isIntersecting', 'isIntersectingEcho'],
-                // }
+                onMounted: 'mounted',
+                onNotIntersecting: {
+                    ifAllOf: ['enteringElementNotVisible', 'exitingElementNotVisible'],
+                }
             },
             proxyPropDefaults:{
                 options: {

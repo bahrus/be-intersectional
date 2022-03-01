@@ -8,10 +8,10 @@ export class BeIntersectional {
     intro(proxy, target, beDecorProps) {
         this.#target = target;
     }
-    onOptions({ options, proxy, enterDelay: primaryDelay }) {
+    onOptions({ options, proxy, enterDelay }) {
         this.disconnect(this);
         const target = this.#target;
-        const observer = new IntersectionObserver(async (entries, observer) => {
+        const observer = new IntersectionObserver((entries, observer) => {
             if (this.#removed)
                 return;
             for (const entry of entries) {
@@ -22,12 +22,12 @@ export class BeIntersectional {
                         proxy.isIntersectingEcho = intersecting; //sometimes proxy is revoked
                     }
                     catch (e) { }
-                }, primaryDelay);
+                }, enterDelay);
             }
         }, options);
         setTimeout(() => {
             observer.observe(target);
-        }, primaryDelay);
+        }, enterDelay);
     }
     async onIntersecting({ isIntersecting, isIntersectingEcho, archive, exitDelay, proxy }) {
         const target = this.#target;
@@ -56,6 +56,10 @@ export class BeIntersectional {
             const elements = insertAdjacentTemplate(target, target, 'afterend');
             if (archive) {
                 this.#elements = elements.map(element => new WeakRef(element));
+                proxy.mounted = {
+                    enterElement: elements[0],
+                    exitElement: elements[elements.length - 1],
+                };
             }
         }
         setTimeout(() => {
@@ -79,6 +83,25 @@ export class BeIntersectional {
     }
     async goPublic({}) {
     }
+    onMounted({ mounted, options, proxy, enterDelay }) {
+        const observer = new IntersectionObserver((entries, observer) => {
+            for (const entry of entries) {
+                const intersecting = entry.isIntersecting;
+                if (entry.target === mounted.enterElement) {
+                    proxy.enteringElementNotVisible = !intersecting;
+                }
+                if (entry.target === mounted.exitElement) {
+                    proxy.exitingElementNotVisible = !intersecting;
+                }
+            }
+        }, options);
+        proxy.enteringElementNotVisible = false;
+        proxy.exitingElementNotVisible = false;
+        setTimeout(() => {
+            observer.observe(mounted.enterElement);
+            observer.observe(mounted.exitElement);
+        }, enterDelay);
+    }
     finale(proxy, target, beDecorProps) {
         this.disconnect(this);
     }
@@ -98,7 +121,10 @@ define({
             upgrade,
             ifWantsToBe,
             forceVisible: [upgrade],
-            virtualProps: ['options', 'isIntersecting', 'isIntersectingEcho', 'archive', 'enterDelay', 'exitDelay', 'mounted'],
+            virtualProps: [
+                'options', 'isIntersecting', 'isIntersectingEcho', 'archive', 'enterDelay', 'exitDelay', 'mounted',
+                'enteringElementNotVisible', 'exitingElementNotVisible',
+            ],
             intro: 'intro',
             finale: 'finale',
             actions: {
@@ -106,9 +132,10 @@ define({
                 onIntersecting: {
                     ifAllOf: ['isIntersecting', 'isIntersectingEcho'],
                 },
-                // onNotIntersecting: {
-                //     ifNoneOf: ['isIntersecting', 'isIntersectingEcho'],
-                // }
+                onMounted: 'mounted',
+                onNotIntersecting: {
+                    ifAllOf: ['enteringElementNotVisible', 'exitingElementNotVisible'],
+                }
             },
             proxyPropDefaults: {
                 options: {

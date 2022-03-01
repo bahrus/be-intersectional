@@ -14,12 +14,15 @@
             display:block;
             height: 100px;
         }
+        template[is-intersectional].expanded{
+            display:none;
+        }
     </style>
     <div style="background-color:red;height:4000px"></div>
     <template be-intersectional='{
         "archive": true
     }'>
-        <div>I am here</div>
+        <div id="iah" class="iah">I am here</div>
     </template>
 
     <script type=importmap>

@@ -8,6 +8,8 @@ export interface BeIntersectionalVirtualProps{
     exitDelay: number;
     archive: boolean;
     mounted: Mounted;
+    enteringElementNotVisible: boolean;
+    exitingElementNotVisible: boolean;
 }
 
 export interface Mounted{
@@ -27,6 +29,8 @@ export interface BeIntersectionalActions{
     onIntersecting(self: this): void;
 
     onNotIntersecting(self: this): void;
+
+    onMounted(self: this): void;
 
     goPublic(self: this): Promise<void>;
 
