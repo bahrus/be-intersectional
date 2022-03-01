@@ -8,7 +8,7 @@ export class BeIntersectional {
     intro(proxy, target, beDecorProps) {
         this.#target = target;
     }
-    onOptions({ options, proxy }) {
+    onOptions({ options, proxy, enterDelay: primaryDelay }) {
         this.disconnect(this);
         const target = this.#target;
         const observer = new IntersectionObserver(async (entries, observer) => {
@@ -22,14 +22,14 @@ export class BeIntersectional {
                         proxy.isIntersectingEcho = intersecting; //sometimes proxy is revoked
                     }
                     catch (e) { }
-                }, 30); //make configurable?
+                }, primaryDelay);
             }
         }, options);
         setTimeout(() => {
             observer.observe(target);
-        }, 50);
+        }, primaryDelay);
     }
-    async onIntersecting({ isIntersecting, isIntersectingEcho, archive }) {
+    async onIntersecting({ isIntersecting, isIntersectingEcho, archive, exitDelay }) {
         const target = this.#target;
         const clone = target.content.cloneNode(true);
         if (target.nextElementSibling === null) {
@@ -51,15 +51,15 @@ export class BeIntersectional {
                 this.#elements = elements.map(element => new WeakRef(element));
             }
         }
-        if (archive) {
-            target.classList.add('expanded');
-        }
-        else {
-            setTimeout(() => {
+        setTimeout(() => {
+            if (archive) {
+                target.classList.add('expanded');
+            }
+            else {
                 this.#removed = true;
                 target.remove();
-            }, 16);
-        }
+            }
+        }, exitDelay);
     }
     async onNotIntersecting({}) {
         if (this.#elements !== undefined) {
@@ -91,7 +91,7 @@ define({
             upgrade,
             ifWantsToBe,
             forceVisible: [upgrade],
-            virtualProps: ['options', 'isIntersecting', 'isIntersectingEcho', 'archive'],
+            virtualProps: ['options', 'isIntersecting', 'isIntersectingEcho', 'archive', 'enterDelay', 'exitDelay'],
             intro: 'intro',
             finale: 'finale',
             actions: {
@@ -106,8 +106,10 @@ define({
             proxyPropDefaults: {
                 options: {
                     threshold: 0,
-                    rootMargin: '0px'
+                    rootMargin: '0px',
                 },
+                enterDelay: 30,
+                exitDelay: 30,
             }
         },
     },

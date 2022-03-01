@@ -12,7 +12,7 @@ export class BeIntersectional implements BeIntersectionalActions{
         this.#target = target;
     }
 
-    onOptions({options, proxy}: this): void {
+    onOptions({options, proxy, enterDelay: primaryDelay}: this): void {
         this.disconnect(this);
         const target = this.#target;
         const observer = new IntersectionObserver(async (entries: IntersectionObserverEntry[], observer: IntersectionObserver) => {
@@ -25,15 +25,15 @@ export class BeIntersectional implements BeIntersectionalActions{
                         proxy.isIntersectingEcho = intersecting;//sometimes proxy is revoked
                     }catch(e){}
                     
-                }, 30); //make configurable?
+                }, primaryDelay); 
             }
         }, options);
         setTimeout(() => {
             observer.observe(target);
-        }, 50); 
+        }, primaryDelay); 
     }
 
-    async onIntersecting({isIntersecting, isIntersectingEcho, archive}: this) {
+    async onIntersecting({isIntersecting, isIntersectingEcho, archive, exitDelay}: this) {
         const target = this.#target;
         const clone = target.content.cloneNode(true);
 
@@ -57,14 +57,14 @@ export class BeIntersectional implements BeIntersectionalActions{
             }
             
         }
-        if(archive){
-            target.classList.add('expanded');
-        }else{
-            setTimeout(() => {
+        setTimeout(() => {
+            if(archive){
+                target.classList.add('expanded');
+            }else{
                 this.#removed = true;
                 target.remove();
-            }, 16);
-        }
+            }
+        }, exitDelay);
 
     }
 
@@ -112,7 +112,7 @@ define<BeIntersectionalProps & BeDecoratedProps<BeIntersectionalProps, BeInterse
             upgrade,
             ifWantsToBe,
             forceVisible: [upgrade],
-            virtualProps: ['options', 'isIntersecting', 'isIntersectingEcho', 'archive'],
+            virtualProps: ['options', 'isIntersecting', 'isIntersectingEcho', 'archive', 'enterDelay', 'exitDelay'],
             intro: 'intro',
             finale: 'finale',
             actions: {
@@ -127,8 +127,10 @@ define<BeIntersectionalProps & BeDecoratedProps<BeIntersectionalProps, BeInterse
             proxyPropDefaults:{
                 options: {
                     threshold: 0,
-                    rootMargin: '0px'
+                    rootMargin: '0px',
                 },
+                enterDelay: 30,
+                exitDelay: 30,
             }
         },
     },

@@ -4,6 +4,8 @@ export interface BeIntersectionalVirtualProps{
     options: IntersectionObserverInit;
     isIntersecting: boolean;
     isIntersectingEcho: boolean;
+    enterDelay: number;
+    exitDelay: number;
     archive: boolean;
 }
 
