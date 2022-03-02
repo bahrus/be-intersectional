@@ -7,7 +7,7 @@ export interface BeIntersectionalVirtualProps{
     enterDelay: number;
     exitDelay: number;
     archive: boolean;
-    mounted: Mounted;
+    mounted: Mounted | undefined;
     enteringElementNotVisible: boolean;
     exitingElementNotVisible: boolean;
 }

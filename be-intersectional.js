@@ -32,6 +32,8 @@ export class BeIntersectional {
     async onIntersecting({ isIntersecting, isIntersectingEcho, archive, exitDelay, proxy }) {
         const target = this.#target;
         const clone = target.content.cloneNode(true);
+        let enterElement;
+        let exitElement;
         if (target.nextElementSibling === null) {
             target.parentElement.appendChild(clone);
             if (archive) {
@@ -45,10 +47,8 @@ export class BeIntersectional {
                     ns = ns.nextElementSibling;
                 }
                 this.#elements = refs;
-                proxy.mounted = {
-                    enterElement: firstSibling,
-                    exitElement: lastSibling,
-                };
+                enterElement = firstSibling;
+                exitElement = lastSibling;
             }
         }
         else {
@@ -56,23 +56,25 @@ export class BeIntersectional {
             const elements = insertAdjacentTemplate(target, target, 'afterend');
             if (archive) {
                 this.#elements = elements.map(element => new WeakRef(element));
-                proxy.mounted = {
-                    enterElement: elements[0],
-                    exitElement: elements[elements.length - 1],
-                };
+                enterElement = elements[0];
+                exitElement = elements[elements.length - 1];
             }
         }
         setTimeout(() => {
             if (archive) {
-                target.classList.add('expanded');
+                this.#target.classList.add('expanded');
+                proxy.mounted = {
+                    enterElement,
+                    exitElement,
+                };
             }
             else {
                 this.#removed = true;
-                target.remove();
+                this.#target.remove();
             }
         }, exitDelay);
     }
-    async onNotIntersecting({}) {
+    async onNotIntersecting({ proxy }) {
         if (this.#elements !== undefined) {
             for (const element of this.#elements) {
                 element.deref()?.remove();
@@ -80,6 +82,7 @@ export class BeIntersectional {
             this.#elements = undefined;
         }
         this.#target.classList.remove('expanded');
+        proxy.mounted = undefined;
     }
     async goPublic({}) {
     }

@@ -36,7 +36,8 @@ export class BeIntersectional implements BeIntersectionalActions{
     async onIntersecting({isIntersecting, isIntersectingEcho, archive, exitDelay, proxy}: this) {
         const target = this.#target;
         const clone = target.content.cloneNode(true);
-
+        let enterElement: Element;
+        let exitElement: Element;
         if(target.nextElementSibling === null){
             target.parentElement!.appendChild(clone);
             if(archive){
@@ -50,10 +51,8 @@ export class BeIntersectional implements BeIntersectionalActions{
                     ns = ns!.nextElementSibling;
                 }
                 this.#elements = refs;
-                proxy.mounted = {
-                    enterElement: firstSibling!,
-                    exitElement: lastSibling!,
-                }
+                enterElement = firstSibling!;
+                exitElement = lastSibling!;
             }
 
         }else{
@@ -61,25 +60,28 @@ export class BeIntersectional implements BeIntersectionalActions{
             const elements = insertAdjacentTemplate(target, target, 'afterend');
             if(archive){
                 this.#elements = elements.map(element => new WeakRef(element));
-                proxy.mounted = {
-                    enterElement: elements[0],
-                    exitElement: elements[elements.length - 1],
-                };
+                enterElement = elements[0];
+                exitElement = elements[elements.length - 1];
             }
             
         }
         setTimeout(() => {
+
             if(archive){
-                target.classList.add('expanded');
+                this.#target.classList.add('expanded');
+                proxy.mounted = {
+                    enterElement,
+                    exitElement,
+                };
             }else{
                 this.#removed = true;
-                target.remove();
+                this.#target.remove();
             }
         }, exitDelay);
 
     }
 
-    async onNotIntersecting({}: this){
+    async onNotIntersecting({proxy}: this){
         if(this.#elements !== undefined){
             for(const element of this.#elements){
                 element.deref()?.remove();
@@ -87,6 +89,7 @@ export class BeIntersectional implements BeIntersectionalActions{
             this.#elements = undefined;
         }
         this.#target.classList.remove('expanded');
+        proxy.mounted = undefined;
     }
 
     async goPublic({}: this){
@@ -97,10 +100,10 @@ export class BeIntersectional implements BeIntersectionalActions{
         const observer = new IntersectionObserver((entries: IntersectionObserverEntry[], observer: IntersectionObserver) => {
             for(const entry of entries){
                 const intersecting = entry.isIntersecting;
-                if(entry.target === mounted.enterElement){
+                if(entry.target === mounted!.enterElement){
                     proxy.enteringElementNotVisible = !intersecting;
                 }
-                if(entry.target === mounted.exitElement){
+                if(entry.target === mounted!.exitElement){
                     proxy.exitingElementNotVisible = !intersecting;
                 }
             }
@@ -108,8 +111,8 @@ export class BeIntersectional implements BeIntersectionalActions{
         proxy.enteringElementNotVisible = false;
         proxy.exitingElementNotVisible = false;
         setTimeout(() => {
-            observer.observe(mounted.enterElement);
-            observer.observe(mounted.exitElement);
+            observer.observe(mounted!.enterElement);
+            observer.observe(mounted!.exitElement);
         }, enterDelay); 
     }
 
