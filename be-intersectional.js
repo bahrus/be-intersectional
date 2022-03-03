@@ -1,10 +1,10 @@
 import { define } from 'be-decorated/be-decorated.js';
 import { register } from 'be-hive/register.js';
 export class BeIntersectional {
-    #observer;
-    #removed = false;
+    #templateObserver;
+    #mountedElementObserver;
+    #expanded = false;
     #target;
-    #elements;
     intro(proxy, target, beDecorProps) {
         this.#target = target;
     }
@@ -12,105 +12,84 @@ export class BeIntersectional {
         this.disconnect(this);
         const target = this.#target;
         const observer = new IntersectionObserver((entries, observer) => {
-            if (this.#removed)
-                return;
             for (const entry of entries) {
                 const intersecting = entry.isIntersecting;
-                proxy.isIntersecting = intersecting;
+                proxy.templIntersecting = intersecting;
                 setTimeout(() => {
                     try {
-                        proxy.isIntersectingEcho = intersecting; //sometimes proxy is revoked
+                        proxy.templIntersectingEcho = intersecting; //sometimes proxy is revoked
                     }
                     catch (e) { }
                 }, enterDelay);
             }
         }, options);
+        this.#templateObserver = observer;
         setTimeout(() => {
             observer.observe(target);
         }, enterDelay);
     }
-    async onIntersecting({ isIntersecting, isIntersectingEcho, archive, exitDelay, proxy }) {
+    async onIntersecting({ templIntersecting, templIntersectingEcho, exitDelay, proxy }) {
+        if (this.#expanded)
+            return;
         const target = this.#target;
+        let mountedElement = null;
         const clone = target.content.cloneNode(true);
-        let enterElement;
-        let exitElement;
         if (target.nextElementSibling === null) {
             target.parentElement.appendChild(clone);
-            if (archive) {
-                let ns = target.nextElementSibling;
-                const firstSibling = ns;
-                let lastSibling = ns;
-                const refs = [];
-                while (ns !== null) {
-                    refs.push(new WeakRef(ns));
-                    lastSibling = ns;
-                    ns = ns.nextElementSibling;
-                }
-                this.#elements = refs;
-                enterElement = firstSibling;
-                exitElement = lastSibling;
-            }
+            mountedElement = target.nextElementSibling;
         }
         else {
-            const { insertAdjacentTemplate } = await import('trans-render/lib/insertAdjacentTemplate.js');
-            const elements = insertAdjacentTemplate(target, target, 'afterend');
-            if (archive) {
-                this.#elements = elements.map(element => new WeakRef(element));
-                enterElement = elements[0];
-                exitElement = elements[elements.length - 1];
+            const children = Array.from(clone.childNodes);
+            for (const child of children) {
+                if (child instanceof Element) {
+                    mountedElement = child;
+                    target.insertAdjacentElement('afterend', child);
+                    break;
+                }
             }
         }
+        if (mountedElement === null) {
+            throw '404';
+        }
+        this.#expanded = true;
         setTimeout(() => {
-            if (archive) {
-                this.#target.classList.add('expanded');
-                proxy.mounted = {
-                    enterElement,
-                    exitElement,
-                };
-            }
-            else {
-                this.#removed = true;
-                this.#target.remove();
-            }
+            this.#target.classList.add('expanded');
+            proxy.mountedElementRef = new WeakRef(mountedElement);
         }, exitDelay);
     }
-    async onNotIntersecting({ proxy }) {
-        if (this.#elements !== undefined) {
-            for (const element of this.#elements) {
-                element.deref()?.remove();
-            }
-            this.#elements = undefined;
-        }
+    async onNotIntersecting({ proxy, mountedElementRef }) {
+        const mountedElement = mountedElementRef.deref();
+        if (mountedElement === undefined)
+            return;
+        this.#target.innerHTML = '';
+        this.#target.content.appendChild(mountedElement);
         this.#target.classList.remove('expanded');
-        proxy.mounted = undefined;
+        proxy.mountedElementRef = undefined;
     }
-    async goPublic({}) {
-    }
-    onMounted({ mounted, options, proxy, enterDelay }) {
+    onMounted({ mountedElementRef, options, proxy, enterDelay }) {
+        const mountedElement = mountedElementRef.deref();
+        if (mountedElement === undefined)
+            return;
         const observer = new IntersectionObserver((entries, observer) => {
             for (const entry of entries) {
-                const intersecting = entry.isIntersecting;
-                if (entry.target === mounted.enterElement) {
-                    proxy.enteringElementNotVisible = !intersecting;
-                }
-                if (entry.target === mounted.exitElement) {
-                    proxy.exitingElementNotVisible = !intersecting;
-                }
+                proxy.mountedElementNotVisible = !entry.isIntersecting;
             }
         }, options);
-        proxy.enteringElementNotVisible = false;
-        proxy.exitingElementNotVisible = false;
+        this.#mountedElementObserver = observer;
+        proxy.mountedElementNotVisible = false;
         setTimeout(() => {
-            observer.observe(mounted.enterElement);
-            observer.observe(mounted.exitElement);
+            observer.observe(mountedElement);
         }, enterDelay);
     }
     finale(proxy, target, beDecorProps) {
         this.disconnect(this);
     }
     disconnect({}) {
-        if (this.#observer) {
-            this.#observer.disconnect();
+        if (this.#templateObserver) {
+            this.#templateObserver.disconnect();
+        }
+        if (this.#mountedElementObserver) {
+            this.#mountedElementObserver.disconnect();
         }
     }
 }
@@ -125,20 +104,18 @@ define({
             ifWantsToBe,
             forceVisible: [upgrade],
             virtualProps: [
-                'options', 'isIntersecting', 'isIntersectingEcho', 'archive', 'enterDelay', 'exitDelay', 'mounted',
-                'enteringElementNotVisible', 'exitingElementNotVisible',
+                'options', 'templIntersecting', 'templIntersectingEcho', 'enterDelay', 'exitDelay',
+                'mountedElementRef', 'mountedElementNotVisible'
             ],
             intro: 'intro',
             finale: 'finale',
             actions: {
                 onOptions: 'options',
                 onIntersecting: {
-                    ifAllOf: ['isIntersecting', 'isIntersectingEcho'],
+                    ifAllOf: ['templIntersecting', 'templIntersectingEcho'],
                 },
-                onMounted: 'mounted',
-                onNotIntersecting: {
-                    ifAllOf: ['enteringElementNotVisible', 'exitingElementNotVisible'],
-                }
+                onMounted: 'mountedElementRef',
+                onNotIntersecting: 'mountedElementNotVisible',
             },
             proxyPropDefaults: {
                 options: {
