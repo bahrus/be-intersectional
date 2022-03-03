@@ -1,7 +1,5 @@
 # be-intersectional
 
-Use Case I
-
 Materialize / Dematerialize template on demand.  Support for virtual lists.
 
 ## Syntax

@@ -70,6 +70,7 @@ export class BeIntersectional implements BeIntersectionalActions{
         this.#target.innerHTML = '';
         this.#target.content.appendChild(mountedElement);
         this.#target.classList.remove('expanded');
+        this.#expanded = false;
         proxy.mountedElementRef = undefined;
     }
 
@@ -94,10 +95,10 @@ export class BeIntersectional implements BeIntersectionalActions{
     }
 
     disconnect({}: this){
-        if(this.#templateObserver){
+        if(this.#templateObserver !== undefined){
             this.#templateObserver.disconnect();
         }
-        if(this.#mountedElementObserver){
+        if(this.#mountedElementObserver !== undefined){
             this.#mountedElementObserver.disconnect();
         }
     }
