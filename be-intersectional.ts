@@ -64,11 +64,13 @@ export class BeIntersectional implements BeIntersectionalActions{
 
     }
 
-    async onNotIntersecting({proxy, mountedElementRef}: this){
+    async onNotIntersecting({proxy, mountedElementRef, dumpOnExit}: this){
         const mountedElement = mountedElementRef!.deref();
         if(mountedElement === undefined) return;
-        this.#target.innerHTML = '';
-        this.#target.content.appendChild(mountedElement);
+        if(!dumpOnExit){
+            this.#target.innerHTML = '';
+            this.#target.content.appendChild(mountedElement);
+        }
         this.#target.classList.remove('expanded');
         this.#expanded = false;
         proxy.mountedElementRef = undefined;
@@ -125,7 +127,7 @@ define<BeIntersectionalProps & BeDecoratedProps<BeIntersectionalProps, BeInterse
             forceVisible: [upgrade],
             virtualProps: [
                 'options', 'templIntersecting', 'templIntersectingEcho', 'enterDelay', 'exitDelay', 
-                'mountedElementRef', 'mountedElementNotVisible'
+                'mountedElementRef', 'mountedElementNotVisible', 'dumpOnExit'
             ],
             intro: 'intro',
             finale: 'finale',

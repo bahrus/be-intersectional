@@ -57,12 +57,14 @@ export class BeIntersectional {
             proxy.mountedElementRef = new WeakRef(mountedElement);
         }, exitDelay);
     }
-    async onNotIntersecting({ proxy, mountedElementRef }) {
+    async onNotIntersecting({ proxy, mountedElementRef, dumpOnExit }) {
         const mountedElement = mountedElementRef.deref();
         if (mountedElement === undefined)
             return;
-        this.#target.innerHTML = '';
-        this.#target.content.appendChild(mountedElement);
+        if (!dumpOnExit) {
+            this.#target.innerHTML = '';
+            this.#target.content.appendChild(mountedElement);
+        }
         this.#target.classList.remove('expanded');
         this.#expanded = false;
         proxy.mountedElementRef = undefined;
@@ -106,7 +108,7 @@ define({
             forceVisible: [upgrade],
             virtualProps: [
                 'options', 'templIntersecting', 'templIntersectingEcho', 'enterDelay', 'exitDelay',
-                'mountedElementRef', 'mountedElementNotVisible'
+                'mountedElementRef', 'mountedElementNotVisible', 'dumpOnExit'
             ],
             intro: 'intro',
             finale: 'finale',

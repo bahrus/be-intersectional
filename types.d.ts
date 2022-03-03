@@ -8,6 +8,7 @@ export interface BeIntersectionalVirtualProps{
     exitDelay: number;
     mountedElementNotVisible: boolean;
     mountedElementRef: WeakRef<Element> | undefined;
+    dumpOnExit: boolean;
 }
 
 
