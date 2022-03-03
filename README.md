@@ -2,7 +2,7 @@
 
 Use Case I
 
-Instantiate template when viewable.  Allows for instantiating virtual list.
+Materialize / Dematerialize template on demand.  Support for virtual lists.
 
 ## Syntax
 
@@ -33,7 +33,7 @@ Specify options:
     <div>I am here</div>
 </template>
 
-Archive deletes the instantiated template, and retains the original template, so the content can materialize again when brought back into view.
+When scrolled out of view, content is deleted, but the original template is retained, so the content can materialize again when brought back into view.
 
 Use Case II [TODO]
 

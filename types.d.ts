@@ -2,20 +2,14 @@ import {BeDecoratedProps} from 'be-decorated/types';
 
 export interface BeIntersectionalVirtualProps{
     options: IntersectionObserverInit;
-    isIntersecting: boolean;
-    isIntersectingEcho: boolean;
+    templIntersecting: boolean;
+    templIntersectingEcho: boolean;
     enterDelay: number;
     exitDelay: number;
-    archive: boolean;
-    mounted: Mounted | undefined;
-    enteringElementNotVisible: boolean;
-    exitingElementNotVisible: boolean;
+    mountedElementNotVisible: boolean;
+    mountedElementRef: WeakRef<Element> | undefined;
 }
 
-export interface Mounted{
-    enterElement: Element;
-    exitElement: Element;
-}
 
 export interface BeIntersectionalProps extends BeIntersectionalVirtualProps{
     proxy: HTMLTemplateElement & BeIntersectionalVirtualProps;
@@ -31,8 +25,6 @@ export interface BeIntersectionalActions{
     onNotIntersecting(self: this): void;
 
     onMounted(self: this): void;
-
-    goPublic(self: this): Promise<void>;
 
     finale(proxy: HTMLTemplateElement & BeIntersectionalProps, target: HTMLTemplateElement, beDecorProps: BeDecoratedProps): void;
 }
