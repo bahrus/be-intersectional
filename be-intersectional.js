@@ -63,6 +63,8 @@ export class BeIntersectional {
             return;
         if (!dumpOnExit) {
             this.#target.innerHTML = '';
+            const { beFrozen } = await import('trans-render/lib/freeze.js');
+            beFrozen(mountedElement);
             this.#target.content.appendChild(mountedElement);
         }
         this.#target.classList.remove('expanded');

@@ -28,7 +28,7 @@
     "url": "git+https://github.com/bahrus/be-intersectional.git"
   },
   "dependencies": {
-    "trans-render": "0.0.502",
+    "trans-render": "0.0.504",
     "be-decorated": "0.0.87",
     "be-hive": "0.0.34"
   },
