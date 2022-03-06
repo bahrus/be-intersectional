@@ -34,7 +34,7 @@
   },
   "devDependencies": {
     "xtal-test": "0.0.55",
-    "xtal-editor": "0.0.130",
+    "xtal-editor": "0.0.140",
     "@skypack/package-check": "0.2.2",
     "@custom-elements-manifest/analyzer": "0.5.7"
   },
