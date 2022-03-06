@@ -70,7 +70,7 @@ export class BeIntersectional implements BeIntersectionalActions{
         if(!dumpOnExit){
             this.#target.innerHTML = '';
             const {beFrozen} = await import('trans-render/lib/freeze.js');
-            beFrozen(mountedElement);
+            if(mountedElement.isConnected) beFrozen(mountedElement);
             this.#target.content.appendChild(mountedElement);
         }
         this.#target.classList.remove('expanded');

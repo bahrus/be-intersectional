@@ -1,5 +1,7 @@
 import {BeDecoratedProps} from 'be-decorated/types';
-
+declare class WeakRef<T>{
+    deref(): T | undefined;
+}
 export interface BeIntersectionalVirtualProps{
     options: IntersectionObserverInit;
     templIntersecting: boolean;
