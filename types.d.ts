@@ -4,6 +4,7 @@ declare class WeakRef<T>{
 }
 export interface BeIntersectionalVirtualProps{
     options: IntersectionObserverInit;
+    rootClosest: string;
     templIntersecting: boolean;
     templIntersectingEcho: boolean;
     enterDelay: number;

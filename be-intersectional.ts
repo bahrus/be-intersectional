@@ -12,9 +12,16 @@ export class BeIntersectional implements BeIntersectionalActions{
         this.#target = target;
     }
 
-    onOptions({options, proxy, enterDelay}: this): void {
+    async onOptions({options, proxy, enterDelay, rootClosest}: this) {
         this.disconnect(this);
         const target = this.#target;
+        if(rootClosest !== undefined){
+            const root = target.closest(rootClosest);
+            if(root === null){
+                throw '404';
+            }
+            options.root = root;
+        }
         const observer = new IntersectionObserver((entries: IntersectionObserverEntry[], observer: IntersectionObserver) => {
             for(const entry of entries){
                 const intersecting = entry.isIntersecting;
@@ -129,7 +136,7 @@ define<BeIntersectionalProps & BeDecoratedProps<BeIntersectionalProps, BeInterse
             forceVisible: [upgrade],
             virtualProps: [
                 'options', 'templIntersecting', 'templIntersectingEcho', 'enterDelay', 'exitDelay', 
-                'mountedElementRef', 'mountedElementNotVisible', 'dumpOnExit'
+                'mountedElementRef', 'mountedElementNotVisible', 'dumpOnExit', 'rootUpSearch'
             ],
             intro: 'intro',
             finale: 'finale',

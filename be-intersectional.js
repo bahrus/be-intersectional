@@ -8,9 +8,16 @@ export class BeIntersectional {
     intro(proxy, target, beDecorProps) {
         this.#target = target;
     }
-    onOptions({ options, proxy, enterDelay }) {
+    async onOptions({ options, proxy, enterDelay, rootClosest }) {
         this.disconnect(this);
         const target = this.#target;
+        if (rootClosest !== undefined) {
+            const root = target.closest(rootClosest);
+            if (root === null) {
+                throw '404';
+            }
+            options.root = root;
+        }
         const observer = new IntersectionObserver((entries, observer) => {
             for (const entry of entries) {
                 const intersecting = entry.isIntersecting;
@@ -111,7 +118,7 @@ define({
             forceVisible: [upgrade],
             virtualProps: [
                 'options', 'templIntersecting', 'templIntersectingEcho', 'enterDelay', 'exitDelay',
-                'mountedElementRef', 'mountedElementNotVisible', 'dumpOnExit'
+                'mountedElementRef', 'mountedElementNotVisible', 'dumpOnExit', 'rootUpSearch'
             ],
             intro: 'intro',
             finale: 'finale',
