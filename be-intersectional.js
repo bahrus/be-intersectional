@@ -118,7 +118,7 @@ define({
             forceVisible: [upgrade],
             virtualProps: [
                 'options', 'templIntersecting', 'templIntersectingEcho', 'enterDelay', 'exitDelay',
-                'mountedElementRef', 'mountedElementNotVisible', 'dumpOnExit', 'rootUpSearch'
+                'mountedElementRef', 'mountedElementNotVisible', 'dumpOnExit', 'rootClosest'
             ],
             intro: 'intro',
             finale: 'finale',
