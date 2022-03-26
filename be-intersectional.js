@@ -32,7 +32,7 @@ export class BeIntersectional {
         setTimeout(() => {
             observer.observe(target);
         }, enterDelay);
-        requestIdleCallback(() => {
+        setTimeout(() => {
             if (isVisible(target)) {
                 proxy.templIntersecting = true;
                 setTimeout(() => {
@@ -42,7 +42,7 @@ export class BeIntersectional {
                     catch (e) { }
                 }, enterDelay);
             }
-        });
+        }, 500);
     }
     async onIntersecting({ templIntersecting, templIntersectingEcho, exitDelay, proxy }) {
         if (this.#expanded)

@@ -37,7 +37,7 @@ export class BeIntersectional implements BeIntersectionalActions{
         setTimeout(() => {
             observer.observe(target);
         }, enterDelay);
-        requestIdleCallback(() => {
+        setTimeout(() => {
             if(isVisible(target)){
                 proxy.templIntersecting = true;
                 setTimeout(() => {
@@ -47,7 +47,7 @@ export class BeIntersectional implements BeIntersectionalActions{
                     
                 }, enterDelay); 
             }
-        });
+        }, 500);
         
     }
 
