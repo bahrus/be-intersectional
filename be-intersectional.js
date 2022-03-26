@@ -34,11 +34,16 @@ export class BeIntersectional {
         setTimeout(() => {
             observer.observe(target);
         }, enterDelay);
+        const { isVisible } = await import('./isVisible.js');
+        if (isVisible(target)) {
+            proxy.templIntersecting = true;
+            proxy.templIntersectingEcho = true;
+        }
     }
     async onIntersecting({ templIntersecting, templIntersectingEcho, exitDelay, proxy }) {
         if (this.#expanded)
             return;
-        const target = this.#target.localName === 'template' ? this.#target : this.#target.querySelector('template');
+        const target = this.#target;
         let mountedElement = null;
         const clone = target.content.cloneNode(true);
         if (target.nextElementSibling === null) {
@@ -60,7 +65,7 @@ export class BeIntersectional {
         }
         this.#expanded = true;
         setTimeout(() => {
-            target.classList.add('expanded');
+            this.#target.classList.add('expanded');
             proxy.mountedElementRef = new WeakRef(mountedElement);
         }, exitDelay);
     }
@@ -108,7 +113,7 @@ export class BeIntersectional {
 }
 const tagName = 'be-intersectional';
 const ifWantsToBe = 'intersectional';
-const upgrade = '*';
+const upgrade = 'template';
 define({
     config: {
         tagName,
