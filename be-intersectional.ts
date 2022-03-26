@@ -42,11 +42,13 @@ export class BeIntersectional implements BeIntersectionalActions{
         setTimeout(() => {
             observer.observe(target);
         }, enterDelay);
+        requestIdleCallback(() => {
+            if(isVisible(target)){
+                proxy.templIntersecting = true;
+                proxy.templIntersectingEcho = true;
+            }
+        });
         
-        if(isVisible(target)){
-            proxy.templIntersecting = true;
-            proxy.templIntersectingEcho = true;
-        }
     }
 
     async onIntersecting({templIntersecting, templIntersectingEcho, exitDelay, proxy}: this) {

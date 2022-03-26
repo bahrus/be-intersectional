@@ -38,10 +38,12 @@ export class BeIntersectional {
         setTimeout(() => {
             observer.observe(target);
         }, enterDelay);
-        if (isVisible(target)) {
-            proxy.templIntersecting = true;
-            proxy.templIntersectingEcho = true;
-        }
+        requestIdleCallback(() => {
+            if (isVisible(target)) {
+                proxy.templIntersecting = true;
+                proxy.templIntersectingEcho = true;
+            }
+        });
     }
     async onIntersecting({ templIntersecting, templIntersectingEcho, exitDelay, proxy }) {
         if (this.#expanded)
