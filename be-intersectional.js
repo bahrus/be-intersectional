@@ -26,12 +26,6 @@ export class BeIntersectional {
                     intersecting = isVisible(target);
                 }
                 proxy.templIntersecting = intersecting;
-                setTimeout(() => {
-                    try {
-                        proxy.templIntersectingEcho = intersecting; //sometimes proxy is revoked
-                    }
-                    catch (e) { }
-                }, enterDelay);
             }
         }, options);
         this.#templateObserver = observer;
@@ -41,7 +35,12 @@ export class BeIntersectional {
         requestIdleCallback(() => {
             if (isVisible(target)) {
                 proxy.templIntersecting = true;
-                proxy.templIntersectingEcho = true;
+                setTimeout(() => {
+                    try {
+                        proxy.templIntersectingEcho = true; //sometimes proxy is revoked
+                    }
+                    catch (e) { }
+                }, enterDelay);
             }
         });
     }
