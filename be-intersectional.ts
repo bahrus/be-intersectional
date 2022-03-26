@@ -42,7 +42,7 @@ export class BeIntersectional implements BeIntersectionalActions{
 
     async onIntersecting({templIntersecting, templIntersectingEcho, exitDelay, proxy}: this) {
         if(this.#expanded) return;
-        const target = this.#target;
+        const target = this.#target.localName === 'template' ? this.#target : this.#target.querySelector('template')!;
         let mountedElement: Element | null = null;
         const clone = target.content.cloneNode(true);
         if(target.nextElementSibling === null){
@@ -64,7 +64,7 @@ export class BeIntersectional implements BeIntersectionalActions{
         }
         this.#expanded = true;
         setTimeout(() => {
-            this.#target.classList.add('expanded');
+            target.classList.add('expanded');
             proxy.mountedElementRef = new WeakRef(mountedElement!);
             
         }, exitDelay);
@@ -125,7 +125,7 @@ const tagName = 'be-intersectional';
 
 const ifWantsToBe = 'intersectional';
 
-const upgrade = 'template';
+const upgrade = '*';
 
 define<BeIntersectionalProps & BeDecoratedProps<BeIntersectionalProps, BeIntersectionalActions>, BeIntersectionalActions>({
     config:{
