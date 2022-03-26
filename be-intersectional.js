@@ -18,9 +18,13 @@ export class BeIntersectional {
             }
             options.root = root;
         }
+        const { isVisible } = await import('./isVisible.js');
         const observer = new IntersectionObserver((entries, observer) => {
             for (const entry of entries) {
-                const intersecting = entry.isIntersecting;
+                let intersecting = entry.isIntersecting;
+                if (!intersecting) {
+                    intersecting = isVisible(target);
+                }
                 proxy.templIntersecting = intersecting;
                 setTimeout(() => {
                     try {
@@ -34,7 +38,6 @@ export class BeIntersectional {
         setTimeout(() => {
             observer.observe(target);
         }, enterDelay);
-        const { isVisible } = await import('./isVisible.js');
         if (isVisible(target)) {
             proxy.templIntersecting = true;
             proxy.templIntersectingEcho = true;
