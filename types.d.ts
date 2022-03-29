@@ -12,6 +12,8 @@ export interface BeIntersectionalVirtualProps{
     mountedElementNotVisible: boolean;
     mountedElementRef: WeakRef<Element> | undefined;
     dumpOnExit: boolean;
+    transform: any | any[];
+    host: any;
 }
 
 

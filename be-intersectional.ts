@@ -1,6 +1,7 @@
 import {define, BeDecoratedProps} from 'be-decorated/be-decorated.js';
 import {BeIntersectionalActions, BeIntersectionalProps} from './types';
 import {register} from 'be-hive/register.js';
+import {RenderContext} from 'trans-render/lib/types';
 
 export class BeIntersectional implements BeIntersectionalActions{
     #templateObserver: IntersectionObserver | undefined;
@@ -40,11 +41,20 @@ export class BeIntersectional implements BeIntersectionalActions{
         }, enterDelay); 
     }
 
-    async onIntersecting({templIntersecting, templIntersectingEcho, exitDelay, proxy}: this) {
+    async onIntersecting({templIntersecting, templIntersectingEcho, exitDelay, proxy, transform, host}: this) {
         if(this.#expanded) return;
         const target = this.#target;
         let mountedElement: Element | null = null;
         const clone = target.content.cloneNode(true);
+        if(transform !== undefined){
+            const {DTR} = await import('trans-render/lib/DTR.js');
+            const ctx: RenderContext = {
+                host,
+                match: transform
+            };
+            const dtr = new DTR(ctx);
+            await dtr.transform(clone as DocumentFragment);
+        }
         if(target.nextElementSibling === null){
             target.parentElement!.appendChild(clone);
             mountedElement = target.nextElementSibling as any as Element | null;
@@ -136,7 +146,7 @@ define<BeIntersectionalProps & BeDecoratedProps<BeIntersectionalProps, BeInterse
             forceVisible: [upgrade],
             virtualProps: [
                 'options', 'templIntersecting', 'templIntersectingEcho', 'enterDelay', 'exitDelay', 
-                'mountedElementRef', 'mountedElementNotVisible', 'dumpOnExit', 'rootClosest'
+                'mountedElementRef', 'mountedElementNotVisible', 'dumpOnExit', 'rootClosest', 'transform', 'host'
             ],
             intro: 'intro',
             finale: 'finale',

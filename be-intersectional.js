@@ -35,12 +35,21 @@ export class BeIntersectional {
             observer.observe(target);
         }, enterDelay);
     }
-    async onIntersecting({ templIntersecting, templIntersectingEcho, exitDelay, proxy }) {
+    async onIntersecting({ templIntersecting, templIntersectingEcho, exitDelay, proxy, transform, host }) {
         if (this.#expanded)
             return;
         const target = this.#target;
         let mountedElement = null;
         const clone = target.content.cloneNode(true);
+        if (transform !== undefined) {
+            const { DTR } = await import('trans-render/lib/DTR.js');
+            const ctx = {
+                host,
+                match: transform
+            };
+            const dtr = new DTR(ctx);
+            await dtr.transform(clone);
+        }
         if (target.nextElementSibling === null) {
             target.parentElement.appendChild(clone);
             mountedElement = target.nextElementSibling;
@@ -118,7 +127,7 @@ define({
             forceVisible: [upgrade],
             virtualProps: [
                 'options', 'templIntersecting', 'templIntersectingEcho', 'enterDelay', 'exitDelay',
-                'mountedElementRef', 'mountedElementNotVisible', 'dumpOnExit', 'rootClosest'
+                'mountedElementRef', 'mountedElementNotVisible', 'dumpOnExit', 'rootClosest', 'transform', 'host'
             ],
             intro: 'intro',
             finale: 'finale',
