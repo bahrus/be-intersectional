@@ -74,7 +74,7 @@ export class BeIntersectional {
                 return;
             this.#ignoreNextNonIntersectingEvent = true;
             this.#target.classList.add('expanded');
-            proxy.mountedElementRef = new WeakRef(mountedElement);
+            proxy.mountedElementRef = new WeakRef(this.#target.nextElementSibling);
         }, exitDelay);
     }
     async onNotIntersecting({ proxy, mountedElementRef, dumpOnExit }) {

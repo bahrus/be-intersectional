@@ -78,7 +78,7 @@ export class BeIntersectional implements BeIntersectionalActions{
             if(!this.#expanded) return;
             this.#ignoreNextNonIntersectingEvent = true;
             this.#target.classList.add('expanded');
-            proxy.mountedElementRef = new WeakRef(mountedElement!);
+            proxy.mountedElementRef = new WeakRef(this.#target.nextElementSibling!);
             
         }, exitDelay);
 
