@@ -7,6 +7,7 @@ export class BeIntersectional implements BeIntersectionalActions{
     #templateObserver: IntersectionObserver | undefined;
     #mountedElementObserver: IntersectionObserver | undefined;
     #expanded: boolean = false;
+    #ignoreNextNonIntersectingEvent = false;
     #target!: HTMLTemplateElement;
 
     intro(proxy: HTMLTemplateElement & BeIntersectionalProps, target: HTMLTemplateElement, beDecorProps: BeDecoratedProps): void{
@@ -75,6 +76,7 @@ export class BeIntersectional implements BeIntersectionalActions{
         this.#expanded = true;
         setTimeout(() => {
             if(!this.#expanded) return;
+            this.#ignoreNextNonIntersectingEvent = true;
             this.#target.classList.add('expanded');
             proxy.mountedElementRef = new WeakRef(mountedElement!);
             
@@ -83,6 +85,10 @@ export class BeIntersectional implements BeIntersectionalActions{
     }
 
     async onNotIntersecting({proxy, mountedElementRef, dumpOnExit}: this){
+        if(this.#ignoreNextNonIntersectingEvent){
+            this.#ignoreNextNonIntersectingEvent = false;
+            return;
+        }
         const mountedElement = mountedElementRef!.deref();
         if(mountedElement === undefined) return;
         if(!dumpOnExit){

@@ -4,6 +4,7 @@ export class BeIntersectional {
     #templateObserver;
     #mountedElementObserver;
     #expanded = false;
+    #ignoreNextNonIntersectingEvent = false;
     #target;
     intro(proxy, target, beDecorProps) {
         this.#target = target;
@@ -71,11 +72,16 @@ export class BeIntersectional {
         setTimeout(() => {
             if (!this.#expanded)
                 return;
+            this.#ignoreNextNonIntersectingEvent = true;
             this.#target.classList.add('expanded');
             proxy.mountedElementRef = new WeakRef(mountedElement);
         }, exitDelay);
     }
     async onNotIntersecting({ proxy, mountedElementRef, dumpOnExit }) {
+        if (this.#ignoreNextNonIntersectingEvent) {
+            this.#ignoreNextNonIntersectingEvent = false;
+            return;
+        }
         const mountedElement = mountedElementRef.deref();
         if (mountedElement === undefined)
             return;
