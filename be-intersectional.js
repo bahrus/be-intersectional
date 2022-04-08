@@ -69,6 +69,8 @@ export class BeIntersectional {
         }
         this.#expanded = true;
         setTimeout(() => {
+            if (!this.#expanded)
+                return;
             this.#target.classList.add('expanded');
             proxy.mountedElementRef = new WeakRef(mountedElement);
         }, exitDelay);
@@ -129,6 +131,7 @@ define({
                 'options', 'templIntersecting', 'templIntersectingEcho', 'enterDelay', 'exitDelay',
                 'mountedElementRef', 'mountedElementNotVisible', 'dumpOnExit', 'rootClosest', 'transform', 'host'
             ],
+            nonDryProps: ['templIntersecting', 'templIntersectingEcho', 'mountedElementRef', 'mountedElementNotVisible'],
             intro: 'intro',
             finale: 'finale',
             actions: {
