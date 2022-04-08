@@ -156,7 +156,9 @@ define<BeIntersectionalProps & BeDecoratedProps<BeIntersectionalProps, BeInterse
                     ifAllOf: ['templIntersecting', 'templIntersectingEcho'],
                 },
                 onMounted: 'mountedElementRef',
-                onNotIntersecting: 'mountedElementNotVisible',
+                onNotIntersecting: {
+                    ifAllOf:['mountedElementNotVisible', 'mountedElementRef'],
+                }
             },
             proxyPropDefaults:{
                 options: {

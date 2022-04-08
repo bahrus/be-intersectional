@@ -137,7 +137,9 @@ define({
                     ifAllOf: ['templIntersecting', 'templIntersectingEcho'],
                 },
                 onMounted: 'mountedElementRef',
-                onNotIntersecting: 'mountedElementNotVisible',
+                onNotIntersecting: {
+                    ifAllOf: ['mountedElementNotVisible', 'mountedElementRef'],
+                }
             },
             proxyPropDefaults: {
                 options: {
