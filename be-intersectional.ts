@@ -166,6 +166,7 @@ define<BeIntersectionalProps & BeDecoratedProps<BeIntersectionalProps, BeInterse
                 onOptions: 'options',
                 onIntersecting: {
                     ifAllOf: ['templIntersecting', 'templIntersectingEcho'],
+                    ifKeyIn: ['transform', 'host'],
                 },
                 onMounted: 'mountedElementRef',
                 onNotIntersecting: {
