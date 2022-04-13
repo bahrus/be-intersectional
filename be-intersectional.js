@@ -39,6 +39,10 @@ export class BeIntersectional {
     async onIntersecting({ templIntersecting, templIntersectingEcho, exitDelay, proxy, transform, host }) {
         if (this.#expanded)
             return;
+        if (transform !== undefined && host === undefined) {
+            console.warn('transform without host');
+            return;
+        }
         const target = this.#target;
         let mountedElement = null;
         const clone = target.content.cloneNode(true);
