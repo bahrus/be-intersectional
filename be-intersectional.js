@@ -40,7 +40,6 @@ export class BeIntersectional {
         if (this.#expanded)
             return;
         if (transform !== undefined && host === undefined) {
-            console.warn('transform without host');
             return;
         }
         const target = this.#target;

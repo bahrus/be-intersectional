@@ -45,7 +45,6 @@ export class BeIntersectional implements BeIntersectionalActions{
     async onIntersecting({templIntersecting, templIntersectingEcho, exitDelay, proxy, transform, host}: this) {
         if(this.#expanded) return;
         if(transform !== undefined && host === undefined){
-            console.warn('transform without host');
             return;
         }
         const target = this.#target;
