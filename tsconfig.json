@@ -9,7 +9,9 @@
 		"watch": true
 	},
 	"files": [
-		"be-intersectional.ts"
+		"be-intersectional.ts",
+		//"playwright.config.ts",
+		//"tests/test1.spec.mts"
 	],
 	"exclude":[
 		"build",
