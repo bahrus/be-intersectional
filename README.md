@@ -2,7 +2,7 @@
 
 Materialize / Dematerialize template on demand.  Support for virtual lists.
 
-[![Actions Status](https://github.com/bahrus/be-intersectional/workflows/CI/badge.svg)](https://github.com/bahrus/be-intersectional/actions?query=workflow%3ACI)
+[![Playwright Tests](https://github.com/bahrus/be-intersectional/actions/workflows/CI.yml/badge.svg?branch=baseline)](https://github.com/bahrus/be-intersectional/actions/workflows/CI.yml)
 
 ## Syntax
 
