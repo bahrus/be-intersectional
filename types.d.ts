@@ -2,17 +2,21 @@ import {BeDecoratedProps} from 'be-decorated/types';
 declare class WeakRef<T>{
     deref(): T | undefined;
 }
-export interface BeIntersectionalVirtualProps{
+
+export interface BeIntersectionalEndUserProps {
     options: IntersectionObserverInit;
+    dumpOnExit: boolean;
+    transform: any | any[];
+    enterDelay: number;
+    exitDelay: number;
+}
+export interface BeIntersectionalVirtualProps extends BeIntersectionalEndUserProps {
+    
     rootClosest: string;
     templIntersecting: boolean;
     templIntersectingEcho: boolean;
-    enterDelay: number;
-    exitDelay: number;
     mountedElementNotVisible: boolean;
     mountedElementRef: WeakRef<Element> | undefined;
-    dumpOnExit: boolean;
-    transform: any | any[];
     host: any;
 }
 
