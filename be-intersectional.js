@@ -36,6 +36,12 @@ export class BeIntersectional extends EventTarget {
             this.#observer.disconnect();
         }
     }
+    onIntersectingChange({ isIntersecting, proxy }) {
+        proxy.isNotIntersecting = !isIntersecting;
+    }
+    onNotIntersectingEcho({ isIntersectingEcho, proxy }) {
+        proxy.isNotIntersectingEcho = !isIntersectingEcho;
+    }
     finale(proxy, target, beDecorProps) {
         this.disconnect();
     }

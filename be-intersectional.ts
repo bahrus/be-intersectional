@@ -42,7 +42,17 @@ export abstract class BeIntersectional extends EventTarget implements BeIntersec
         }
     }
 
-    abstract onIntersecting(bip: BeIntersectionalProxy): void;
+    abstract onIntersecting(bip: BIP): void;
+
+    abstract onNotIntersecting(bip: BIP): void;
+
+    onIntersectingChange({isIntersecting, proxy}: BIP){
+        proxy.isNotIntersecting = !isIntersecting;
+    }
+
+    onNotIntersectingEcho({isIntersectingEcho, proxy}: BIP): void {
+        proxy.isNotIntersectingEcho = !isIntersectingEcho;
+    }
 
     finale(proxy: Proxy, target: Element, beDecorProps: BeDecoratedProps<any, any>): void {
         this.disconnect();
