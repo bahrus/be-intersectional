@@ -3,6 +3,7 @@ import {BeDecoratedProps, MinimalProxy} from 'be-decorated/types';
 export interface BeInterseciontalEndUserProps{
     options?: IntersectionObserverInit;
     rootClosest?: string;
+    observeClosest?: string;
     enterDelay?: number;
     exitDelay?: number;
 }

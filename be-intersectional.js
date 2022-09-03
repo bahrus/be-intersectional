@@ -1,6 +1,6 @@
 export class BeIntersectional extends EventTarget {
     #observer;
-    onOptions({ options, proxy, enterDelay, rootClosest, self }) {
+    onOptions({ options, proxy, enterDelay, rootClosest, observeClosest, self }) {
         this.disconnect();
         if (rootClosest !== undefined) {
             const root = self.closest(rootClosest);
@@ -8,6 +8,10 @@ export class BeIntersectional extends EventTarget {
                 throw '404';
             }
             options.root = root;
+        }
+        let targetToObserve = self;
+        if (observeClosest !== undefined) {
+            targetToObserve = self.closest(observeClosest);
         }
         const observer = new IntersectionObserver((entries, observer) => {
             for (const entry of entries) {
@@ -22,7 +26,7 @@ export class BeIntersectional extends EventTarget {
             }
         }, options);
         setTimeout(() => {
-            observer.observe(self);
+            observer.observe(targetToObserve);
         }, enterDelay);
         this.#observer = observer;
         proxy.resolved = true;

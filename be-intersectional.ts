@@ -5,7 +5,7 @@ import {RenderContext} from 'trans-render/lib/types';
 export abstract class BeIntersectional extends EventTarget implements BeIntersectionalActions {
     #observer: IntersectionObserver | undefined;
 
-    onOptions({options, proxy, enterDelay, rootClosest, self}: BIP): void {
+    onOptions({options, proxy, enterDelay, rootClosest, observeClosest, self}: BIP): void {
         this.disconnect();
         if(rootClosest !== undefined){
             const root = self.closest(rootClosest);
@@ -13,6 +13,10 @@ export abstract class BeIntersectional extends EventTarget implements BeIntersec
                 throw '404';
             }
             options!.root = root;
+        }
+        let targetToObserve = self;
+        if(observeClosest !== undefined){
+            targetToObserve = self.closest(observeClosest)!;
         }
         const observer = new IntersectionObserver((entries: IntersectionObserverEntry[], observer: IntersectionObserver) => {
             for(const entry of entries){
@@ -26,7 +30,7 @@ export abstract class BeIntersectional extends EventTarget implements BeIntersec
             }
         }, options);
         setTimeout(() => {
-            observer.observe(self);
+            observer.observe(targetToObserve);
         }, enterDelay);
         this.#observer = observer; 
         proxy.resolved = true;
