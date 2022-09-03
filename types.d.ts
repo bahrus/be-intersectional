@@ -28,9 +28,14 @@ export interface BeIntersectionalActions{
 
     onIntersecting(bip: BIP): void;
 
+    onNotIntersecting(bip: BIP): void;
+
     onIntersectingChange(bip: BIP): void;
 
     onNotIntersectingEcho({isIntersectingEcho, proxy}: BIP): void;
 
     finale(proxy: Proxy, target: Element, beDecorProps: BeDecoratedProps): void;
+
+
+    
 }

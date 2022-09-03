@@ -46,3 +46,26 @@ export class BeIntersectional extends EventTarget {
         this.disconnect();
     }
 }
+export const actions = {
+    onOptions: 'options',
+    onIntersecting: {
+        ifAllOf: ['isIntersecting', 'isIntersectingEcho'],
+    },
+    onIntersectingChange: {
+        ifKeyIn: ['isIntersecting']
+    },
+    onNotIntersecting: {
+        ifAllOf: ['isNotIntersecting', 'isNotIntersectingEcho'],
+    },
+    onNotIntersectingEcho: {
+        ifKeyIn: ['isIntersectingEcho']
+    }
+};
+export const proxyPropDefaults = {
+    options: {
+        threshold: 0,
+        rootMargin: '0px',
+    },
+    enterDelay: 16,
+    exitDelay: 16
+};

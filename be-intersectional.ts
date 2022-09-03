@@ -1,6 +1,6 @@
 import {define, BeDecoratedProps} from 'be-decorated/be-decorated.js';
-import {BeIntersectionalActions, BeIntersectionalProxy, BIP, Proxy} from './types';
-import {RenderContext} from 'trans-render/lib/types';
+import {BeIntersectionalActions, BeIntersectionalProxy, BeIntersectionalVirtualProps, BeInterseciontalEndUserProps, BIP, Proxy} from './types';
+import {RenderContext, Action} from 'trans-render/lib/types';
 
 export abstract class BeIntersectional extends EventTarget implements BeIntersectionalActions {
     #observer: IntersectionObserver | undefined;
@@ -59,4 +59,29 @@ export abstract class BeIntersectional extends EventTarget implements BeIntersec
     }
 
 }
+
+export const actions = {
+    onOptions: 'options',
+    onIntersecting: {
+        ifAllOf: ['isIntersecting', 'isIntersectingEcho'],
+    },
+    onIntersectingChange:{
+        ifKeyIn: ['isIntersecting']
+    },
+    onNotIntersecting: {
+        ifAllOf: ['isNotIntersecting', 'isNotIntersectingEcho'],
+    },
+    onNotIntersectingEcho: {
+        ifKeyIn: ['isIntersectingEcho']
+    }
+} as Partial<{[key in keyof BeIntersectionalActions ]: Action<BeIntersectionalVirtualProps > | keyof BeIntersectionalVirtualProps}>;
+
+export const proxyPropDefaults : BeInterseciontalEndUserProps = {
+    options: {
+        threshold: 0,
+        rootMargin: '0px',
+    },
+    enterDelay: 16,
+    exitDelay: 16
+};
 
