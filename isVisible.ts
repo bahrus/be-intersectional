@@ -21,6 +21,6 @@ export function isVisible(elem: HTMLElement) {
     let pointContainer = root.elementFromPoint(elemCenter.x, elemCenter.y) as Node;
     do {
         if (pointContainer === elem) return true;
-    } while (pointContainer = pointContainer.parentNode);
+    } while (pointContainer = pointContainer.parentNode as Node);
     return false;
 }

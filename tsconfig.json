@@ -10,6 +10,7 @@
 	},
 	"files": [
 		"be-intersectional.ts",
+		"isVisible.ts"
 		//"playwright.config.ts",
 		//"tests/test1.spec.mts"
 	],

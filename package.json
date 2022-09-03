@@ -20,7 +20,8 @@
   ],
   "exports": {
     ".": "./be-intersectional.js",
-    "./be-intersectional.js": "./be-intersectional.js"
+    "./be-intersectional.js": "./be-intersectional.js",
+    "./isVisible.js": "./isVisible.js"
   },
   "types": "types.d.ts",
   "repository": {
@@ -28,17 +29,15 @@
     "url": "git+https://github.com/bahrus/be-intersectional.git"
   },
   "dependencies": {
-    "trans-render": "0.0.536",
-    "be-decorated": "0.0.113",
-    "be-hive": "0.0.45"
+    "be-decorated": "0.0.150",
   },
   "devDependencies": {
-    "@playwright/test": "1.21.1",
-    "may-it-serve": "0.0.0",
+    "@playwright/test": "1.25.1",
+    "may-it-serve": "0.0.2",
     "xtal-shell": "0.0.27",
-    "xtal-editor": "0.0.160",
+    "xtal-editor": "0.0.193",
     "@skypack/package-check": "0.2.2",
-    "@custom-elements-manifest/analyzer": "0.5.7"
+    "@custom-elements-manifest/analyzer": "0.6.4"
   },
   "author": "anderson.bruce.b@gmail.com",
   "license": "MIT",

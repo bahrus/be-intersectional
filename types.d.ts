@@ -1,40 +1,29 @@
-import {BeDecoratedProps} from 'be-decorated/types';
-declare class WeakRef<T>{
-    deref(): T | undefined;
+import {BeDecoratedProps, MinimalProxy} from 'be-decorated/types';
+
+export interface BeInterseciontalEndUserProps{
+    options?: IntersectionObserverInit;
+    rootClosest?: string;
+    enterDelay?: number;
+    exitDelay?: number;
 }
 
-export interface BeIntersectionalEndUserProps {
-    options: IntersectionObserverInit;
-    dumpOnExit: boolean;
-    transform: any | any[];
-    enterDelay: number;
-    exitDelay: number;
-}
-export interface BeIntersectionalVirtualProps extends BeIntersectionalEndUserProps {
-    
-    rootClosest: string;
-    templIntersecting: boolean;
-    templIntersectingEcho: boolean;
-    mountedElementNotVisible: boolean;
-    mountedElementRef: WeakRef<Element> | undefined;
-    host: any;
+export interface BeIntersectionalVirtualProps extends BeInterseciontalEndUserProps, MinimalProxy{
+    isIntersecting: boolean;
+    isIntersectingEcho: boolean;
 }
 
+export type Proxy = Element & BeIntersectionalVirtualProps;
 
-export interface BeIntersectionalProps extends BeIntersectionalVirtualProps{
-    proxy: HTMLTemplateElement & BeIntersectionalVirtualProps;
+export interface BeIntersectionalProxy extends BeIntersectionalActions, BeIntersectionalVirtualProps{
+    proxy: Proxy
 }
+
+export type BIP = BeIntersectionalProxy;
 
 export interface BeIntersectionalActions{
-    intro(proxy: HTMLTemplateElement & BeIntersectionalProps, target: HTMLTemplateElement, beDecorProps: BeDecoratedProps): void;
+    onOptions(bip: BIP): void;
 
-    onOptions(self: this): void;
+    onIntersecting(bip: BIP): void;
 
-    onIntersecting(self: this): void;
-
-    onNotIntersecting(self: this): void;
-
-    onMounted(self: this): void;
-
-    finale(proxy: HTMLTemplateElement & BeIntersectionalProps, target: HTMLTemplateElement, beDecorProps: BeDecoratedProps): void;
+    finale(proxy: Proxy, target: Element, beDecorProps: BeDecoratedProps): void;
 }
