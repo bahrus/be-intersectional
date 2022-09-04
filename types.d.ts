@@ -1,6 +1,6 @@
 import {BeDecoratedProps, MinimalProxy} from 'be-decorated/types';
 
-export interface BeInterseciontalEndUserProps{
+export interface BeIntersectiontalEndUserProps{
     options?: IntersectionObserverInit;
     rootClosest?: string;
     observeClosest?: string;
@@ -8,7 +8,7 @@ export interface BeInterseciontalEndUserProps{
     exitDelay?: number;
 }
 
-export interface BeIntersectionalVirtualProps extends BeInterseciontalEndUserProps, MinimalProxy{
+export interface BeIntersectionalVirtualProps extends BeIntersectiontalEndUserProps, MinimalProxy{
     isIntersecting: boolean;
     isIntersectingEcho: boolean;
     isNotIntersecting: boolean;
