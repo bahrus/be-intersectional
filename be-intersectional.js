@@ -67,5 +67,6 @@ export const proxyPropDefaults = {
         rootMargin: '0px',
     },
     enterDelay: 16,
-    exitDelay: 16
+    exitDelay: 16,
+    isIntersecting: true,
 };

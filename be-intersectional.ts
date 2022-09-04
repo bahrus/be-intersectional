@@ -1,11 +1,11 @@
 import {define, BeDecoratedProps} from 'be-decorated/be-decorated.js';
-import {BeIntersectionalActions, BeIntersectionalProxy, BeIntersectionalVirtualProps, BeInterseciontalEndUserProps, BIP, Proxy} from './types';
+import {BeIntersectionalActions, BeIntersectionalVirtualProps, BeInterseciontalEndUserProps, PP, Proxy} from './types';
 import {RenderContext, Action} from 'trans-render/lib/types';
 
 export abstract class BeIntersectional extends EventTarget implements BeIntersectionalActions {
     #observer: IntersectionObserver | undefined;
 
-    onOptions({options, proxy, enterDelay, rootClosest, observeClosest, self}: BIP): void {
+    onOptions({options, proxy, enterDelay, rootClosest, observeClosest, self}: PP): void {
         this.disconnect();
         if(rootClosest !== undefined){
             const root = self.closest(rootClosest);
@@ -42,15 +42,15 @@ export abstract class BeIntersectional extends EventTarget implements BeIntersec
         }
     }
 
-    abstract onIntersecting(bip: BIP): void;
+    abstract onIntersecting(bip: PP): void;
 
-    abstract onNotIntersecting(bip: BIP): void;
+    abstract onNotIntersecting(bip: PP): void;
 
-    onIntersectingChange({isIntersecting, proxy}: BIP){
+    onIntersectingChange({isIntersecting, proxy}: PP){
         proxy.isNotIntersecting = !isIntersecting;
     }
 
-    onNotIntersectingEcho({isIntersectingEcho, proxy}: BIP): void {
+    onNotIntersectingEcho({isIntersectingEcho, proxy}: PP): void {
         proxy.isNotIntersectingEcho = !isIntersectingEcho;
     }
 
@@ -76,12 +76,13 @@ export const actions = {
     }
 } as Partial<{[key in keyof BeIntersectionalActions ]: Action<BeIntersectionalVirtualProps > | keyof BeIntersectionalVirtualProps}>;
 
-export const proxyPropDefaults : BeInterseciontalEndUserProps = {
+export const proxyPropDefaults = {
     options: {
         threshold: 0,
         rootMargin: '0px',
     },
     enterDelay: 16,
-    exitDelay: 16
-};
+    exitDelay: 16,
+    isIntersecting: true,
+} as BeIntersectionalVirtualProps;
 

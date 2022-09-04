@@ -17,22 +17,22 @@ export interface BeIntersectionalVirtualProps extends BeInterseciontalEndUserPro
 
 export type Proxy = Element & BeIntersectionalVirtualProps;
 
-export interface BeIntersectionalProxy extends BeIntersectionalActions, BeIntersectionalVirtualProps{
-    proxy: Proxy
+export interface ProxyProps extends BeIntersectionalVirtualProps{
+    proxy: Proxy;
 }
 
-export type BIP = BeIntersectionalProxy;
+export type PP = ProxyProps;
 
 export interface BeIntersectionalActions{
-    onOptions(bip: BIP): void;
+    onOptions(pp: PP): void;
 
-    onIntersecting(bip: BIP): void;
+    onIntersecting(pp: PP): void;
 
-    onNotIntersecting(bip: BIP): void;
+    onNotIntersecting(pp: PP): void;
 
-    onIntersectingChange(bip: BIP): void;
+    onIntersectingChange(pp: PP): void;
 
-    onNotIntersectingEcho({isIntersectingEcho, proxy}: BIP): void;
+    onNotIntersectingEcho(pp: PP): void;
 
     finale(proxy: Proxy, target: Element, beDecorProps: BeDecoratedProps): void;
 
