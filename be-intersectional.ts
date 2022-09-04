@@ -83,6 +83,5 @@ export const proxyPropDefaults = {
     },
     enterDelay: 16,
     exitDelay: 16,
-    isIntersecting: true,
 } as BeIntersectionalVirtualProps;
 
