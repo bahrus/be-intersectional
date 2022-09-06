@@ -1,8 +1,8 @@
 import {define, BeDecoratedProps} from 'be-decorated/be-decorated.js';
-import {BeIntersectionalActions, BeIntersectionalVirtualProps, BeInterseciontalEndUserProps, PP, Proxy} from './types';
+import {Actions, VirtualProps, BeInterseciontalEndUserProps, PP, Proxy} from './types';
 import {RenderContext, Action} from 'trans-render/lib/types';
 
-export abstract class BeIntersectional extends EventTarget implements BeIntersectionalActions {
+export abstract class BeIntersectional extends EventTarget implements Actions {
     #observer: IntersectionObserver | undefined;
 
     onOptions({options, proxy, enterDelay, rootClosest, observeClosest, self}: PP): void {
@@ -74,7 +74,7 @@ export const actions = {
     onNotIntersectingEcho: {
         ifKeyIn: ['isIntersectingEcho']
     }
-} as Partial<{[key in keyof BeIntersectionalActions ]: Action<BeIntersectionalVirtualProps > | keyof BeIntersectionalVirtualProps}>;
+} as Partial<{[key in keyof Actions ]: Action<VirtualProps > | keyof VirtualProps}>;
 
 export const proxyPropDefaults = {
     options: {
@@ -83,5 +83,5 @@ export const proxyPropDefaults = {
     },
     enterDelay: 16,
     exitDelay: 16,
-} as BeIntersectionalVirtualProps;
+} as VirtualProps;
 
