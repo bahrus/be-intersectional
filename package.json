@@ -29,7 +29,7 @@
     "url": "git+https://github.com/bahrus/be-intersectional.git"
   },
   "dependencies": {
-    "be-decorated": "0.0.157"
+    "be-decorated": "0.0.162"
   },
   "devDependencies": {
     "@playwright/test": "1.25.2",
