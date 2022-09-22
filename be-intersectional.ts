@@ -1,5 +1,5 @@
 import {define, BeDecoratedProps} from 'be-decorated/be-decorated.js';
-import {Actions, VirtualProps, BeInterseciontalEndUserProps, PP, Proxy} from './types';
+import {Actions, VirtualProps, PP, Proxy} from './types';
 import {RenderContext, Action} from 'trans-render/lib/types';
 
 export abstract class BeIntersectional extends EventTarget implements Actions {
