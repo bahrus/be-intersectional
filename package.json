@@ -29,13 +29,12 @@
     "url": "git+https://github.com/bahrus/be-intersectional.git"
   },
   "dependencies": {
-    "be-decorated": "0.0.179"
+    "be-decorated": "0.0.182"
   },
   "devDependencies": {
     "@playwright/test": "1.27.1",
     "may-it-serve": "0.0.3",
     "xtal-shell": "0.0.27",
-    "xtal-editor": "0.0.196",
     "@skypack/package-check": "0.2.2",
     "@custom-elements-manifest/analyzer": "0.6.4"
   },
