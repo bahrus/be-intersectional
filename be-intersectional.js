@@ -1,5 +1,6 @@
 export class BeIntersectional extends EventTarget {
     #observer;
+    #echoTimeout;
     onOptions({ options, proxy, enterDelay, rootClosest, observeClosest, self }) {
         this.disconnect();
         if (rootClosest !== undefined) {
@@ -17,7 +18,8 @@ export class BeIntersectional extends EventTarget {
             for (const entry of entries) {
                 const intersecting = entry.isIntersecting;
                 proxy.isIntersecting = intersecting;
-                setTimeout(() => {
+                clearTimeout(this.#echoTimeout);
+                this.#echoTimeout = setTimeout(() => {
                     try {
                         proxy.isIntersectingEcho = intersecting; //sometimes proxy is revoked
                     }

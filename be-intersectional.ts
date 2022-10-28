@@ -5,6 +5,7 @@ import {RenderContext, Action} from 'trans-render/lib/types';
 export abstract class BeIntersectional extends EventTarget implements Actions {
     #observer: IntersectionObserver | undefined;
 
+    #echoTimeout: string | number | NodeJS.Timeout | undefined;
     onOptions({options, proxy, enterDelay, rootClosest, observeClosest, self}: PP): void {
         this.disconnect();
         if(rootClosest !== undefined){
@@ -22,7 +23,8 @@ export abstract class BeIntersectional extends EventTarget implements Actions {
             for(const entry of entries){
                 const intersecting = entry.isIntersecting;
                 proxy.isIntersecting = intersecting;
-                setTimeout(() => {
+                clearTimeout(this.#echoTimeout);
+                this.#echoTimeout = setTimeout(() => {
                     try{
                         proxy.isIntersectingEcho = intersecting;//sometimes proxy is revoked
                     }catch(e){}
