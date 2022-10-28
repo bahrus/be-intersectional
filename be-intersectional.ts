@@ -1,4 +1,4 @@
-import {define, BeDecoratedProps} from 'be-decorated/be-decorated.js';
+import {BeDecoratedProps} from 'be-decorated/types.js';
 import {Actions, VirtualProps, PP, Proxy} from './types';
 import {RenderContext, Action} from 'trans-render/lib/types';
 
