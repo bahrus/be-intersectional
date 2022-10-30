@@ -23,8 +23,10 @@ export interface ProxyProps extends VirtualProps{
 
 export type PP = ProxyProps;
 
+export type PPP = Partial<PP>;
+
 export interface Actions{
-    onOptions(pp: PP): void;
+    onOptions(pp: PP): PPP;
 
     onIntersecting(pp: PP): void;
 

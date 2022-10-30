@@ -31,11 +31,16 @@ export class BeIntersectional extends EventTarget {
             observer.observe(targetToObserve);
         }, enterDelay);
         this.#observer = observer;
-        proxy.resolved = true;
+        return {
+            resolved: true
+        };
     }
     disconnect() {
         if (this.#observer) {
             this.#observer.disconnect();
+        }
+        if (this.#echoTimeout) {
+            clearTimeout(this.#echoTimeout);
         }
     }
     onIntersectingChange({ isIntersecting, proxy }) {

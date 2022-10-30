@@ -1,12 +1,12 @@
 import {BeDecoratedProps} from 'be-decorated/types.js';
-import {Actions, VirtualProps, PP, Proxy} from './types';
+import {Actions, VirtualProps, PP, Proxy, PPP} from './types';
 import {RenderContext, Action} from 'trans-render/lib/types';
 
 export abstract class BeIntersectional extends EventTarget implements Actions {
     #observer: IntersectionObserver | undefined;
 
     #echoTimeout: string | number | NodeJS.Timeout | undefined;
-    onOptions({options, proxy, enterDelay, rootClosest, observeClosest, self}: PP): void {
+    onOptions({options, proxy, enterDelay, rootClosest, observeClosest, self}: PP) {
         this.disconnect();
         if(rootClosest !== undefined){
             const root = self.closest(rootClosest);
@@ -34,13 +34,19 @@ export abstract class BeIntersectional extends EventTarget implements Actions {
         setTimeout(() => {
             observer.observe(targetToObserve);
         }, enterDelay);
-        this.#observer = observer; 
-        proxy.resolved = true;
+        this.#observer = observer;
+        return {
+            resolved: true
+        } as PPP;
+        
     }
 
     disconnect(){
         if(this.#observer){
             this.#observer.disconnect();
+        }
+        if(this.#echoTimeout){
+            clearTimeout(this.#echoTimeout);
         }
     }
 
