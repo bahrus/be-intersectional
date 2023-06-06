@@ -1,8 +1,10 @@
-export class BeIntersectional extends EventTarget {
+import { BE } from 'be-enhanced/BE.js';
+export class BeIntersectional extends BE {
     #observer;
     #echoTimeout;
-    onOptions({ options, proxy, enterDelay, rootClosest, observeClosest, self }) {
+    onOptions(self) {
         this.disconnect();
+        const { rootClosest, observeClosest, options, enhancedElement, enterDelay } = self;
         if (rootClosest !== undefined) {
             const root = self.closest(rootClosest);
             if (root === null) {
@@ -10,18 +12,18 @@ export class BeIntersectional extends EventTarget {
             }
             options.root = root;
         }
-        let targetToObserve = self;
+        let targetToObserve = enhancedElement;
         if (observeClosest !== undefined) {
-            targetToObserve = self.closest(observeClosest);
+            targetToObserve = enhancedElement.closest(observeClosest);
         }
         const observer = new IntersectionObserver((entries, observer) => {
             for (const entry of entries) {
                 const intersecting = entry.isIntersecting;
-                proxy.isIntersecting = intersecting;
+                self.isIntersecting = intersecting;
                 clearTimeout(this.#echoTimeout);
                 this.#echoTimeout = setTimeout(() => {
                     try {
-                        proxy.isIntersectingEcho = intersecting; //sometimes proxy is revoked
+                        self.isIntersectingEcho = intersecting; //sometimes proxy is revoked
                     }
                     catch (e) { }
                 }, enterDelay);
@@ -30,7 +32,7 @@ export class BeIntersectional extends EventTarget {
         setTimeout(() => {
             observer.observe(targetToObserve);
         }, enterDelay);
-        this.#observer = observer;
+        self.#observer = observer;
         return {
             resolved: true
         };
@@ -43,13 +45,13 @@ export class BeIntersectional extends EventTarget {
             clearTimeout(this.#echoTimeout);
         }
     }
-    onIntersectingChange({ isIntersecting, proxy }) {
-        proxy.isNotIntersecting = !isIntersecting;
+    onIntersectingChange(self) {
+        self.isNotIntersecting = !this.isIntersecting;
     }
-    onNotIntersectingEcho({ isIntersectingEcho, proxy }) {
-        proxy.isNotIntersectingEcho = !isIntersectingEcho;
+    onNotIntersectingEcho(self) {
+        this.isNotIntersectingEcho = !this.isIntersectingEcho;
     }
-    finale(proxy, target, beDecorProps) {
+    detach(detachedElement) {
         this.disconnect();
     }
 }

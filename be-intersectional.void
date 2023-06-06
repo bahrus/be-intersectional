@@ -1,15 +1,13 @@
-import {BE} from 'be-enhanced/BE.js';
-import {Actions, AllProps, AP, PAP, ProPAP, POA} from './types';
-import {Action} from 'trans-render/lib/types';
+import {BeDecoratedProps} from 'be-decorated/types.js';
+import {Actions, VirtualProps, PP, Proxy, PPP} from './types';
+import {RenderContext, Action} from 'trans-render/lib/types';
 
-export abstract class BeIntersectional extends BE<AP, Actions> implements Actions{
+export abstract class BeIntersectional extends EventTarget implements Actions {
     #observer: IntersectionObserver | undefined;
 
     #echoTimeout: string | number | NodeJS.Timeout | undefined;
-
-    onOptions(self: this): PAP {
+    onOptions({options, proxy, enterDelay, rootClosest, observeClosest, self}: PP) {
         this.disconnect();
-        const {rootClosest, observeClosest, options, enhancedElement, enterDelay} = self;
         if(rootClosest !== undefined){
             const root = self.closest(rootClosest);
             if(root === null){
@@ -17,18 +15,18 @@ export abstract class BeIntersectional extends BE<AP, Actions> implements Action
             }
             options!.root = root;
         }
-        let targetToObserve = enhancedElement;
+        let targetToObserve = self;
         if(observeClosest !== undefined){
-            targetToObserve = enhancedElement.closest(observeClosest)!;
+            targetToObserve = self.closest(observeClosest)!;
         }
         const observer = new IntersectionObserver((entries: IntersectionObserverEntry[], observer: IntersectionObserver) => {
             for(const entry of entries){
                 const intersecting = entry.isIntersecting;
-                self.isIntersecting = intersecting;
+                proxy.isIntersecting = intersecting;
                 clearTimeout(this.#echoTimeout);
                 this.#echoTimeout = setTimeout(() => {
                     try{
-                        self.isIntersectingEcho = intersecting;//sometimes proxy is revoked
+                        proxy.isIntersectingEcho = intersecting;//sometimes proxy is revoked
                     }catch(e){}
                 }, enterDelay); 
             }
@@ -36,10 +34,10 @@ export abstract class BeIntersectional extends BE<AP, Actions> implements Action
         setTimeout(() => {
             observer.observe(targetToObserve);
         }, enterDelay);
-        self.#observer = observer;
+        this.#observer = observer;
         return {
             resolved: true
-        } as PAP;
+        } as PPP;
         
     }
 
@@ -52,26 +50,23 @@ export abstract class BeIntersectional extends BE<AP, Actions> implements Action
         }
     }
 
-    abstract onIntersecting(self: this): void;
+    abstract onIntersecting(bip: PP): void;
 
-    abstract onNotIntersecting(self: this): void;
+    abstract onNotIntersecting(bip: PP): void;
 
-    onIntersectingChange(self: this): void {
-        self.isNotIntersecting = !this.isIntersecting;
+    onIntersectingChange({isIntersecting, proxy}: PP){
+        proxy.isNotIntersecting = !isIntersecting;
     }
 
-    onNotIntersectingEcho(self: this): void {
-        this.isNotIntersectingEcho = !this.isIntersectingEcho;
+    onNotIntersectingEcho({isIntersectingEcho, proxy}: PP): void {
+        proxy.isNotIntersectingEcho = !isIntersectingEcho;
     }
 
-    override detach(detachedElement: Element): void {
+    finale(proxy: Proxy, target: Element, beDecorProps: BeDecoratedProps<any, any>): void {
         this.disconnect();
     }
 
-
 }
-
-export interface BeIntersectional extends AllProps{}
 
 export const actions = {
     onOptions: 'options',
@@ -87,7 +82,7 @@ export const actions = {
     onNotIntersectingEcho: {
         ifKeyIn: ['isIntersectingEcho']
     }
-} as Partial<{[key in keyof Actions ]: Action<AP > | keyof AP}>;
+} as Partial<{[key in keyof Actions ]: Action<VirtualProps > | keyof VirtualProps}>;
 
 export const proxyPropDefaults = {
     options: {
@@ -96,5 +91,5 @@ export const proxyPropDefaults = {
     },
     enterDelay: 16,
     exitDelay: 16,
-} as AP;
+} as VirtualProps;
 

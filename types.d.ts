@@ -1,6 +1,7 @@
-import {BeDecoratedProps, MinimalProxy} from 'be-decorated/types';
+import { ActionOnEventConfigs } from "trans-render/froop/types";
+import {IBE} from 'be-enhanced/types';
 
-export interface EndUserProps{
+export interface EndUserProps extends IBE{
     options?: IntersectionObserverInit;
     rootClosest?: string;
     observeClosest?: string;
@@ -8,35 +9,36 @@ export interface EndUserProps{
     exitDelay?: number;
 }
 
-export interface VirtualProps extends EndUserProps, MinimalProxy{
+export interface AllProps extends EndUserProps{
     isIntersecting: boolean;
     isIntersectingEcho: boolean;
     isNotIntersecting: boolean;
     isNotIntersectingEcho: boolean;
 }
 
-export type Proxy = Element & VirtualProps;
+export interface AllProps extends EndUserProps {}
 
-export interface ProxyProps extends VirtualProps{
-    proxy: Proxy;
-}
+export type AP = AllProps;
 
-export type PP = ProxyProps;
+export type PAP = Partial<AP>;
 
-export type PPP = Partial<PP>;
+export type ProPAP = Promise<PAP>;
+
+export type POA = [PAP | undefined, ActionOnEventConfigs<PAP, Actions>];
+
 
 export interface Actions{
-    onOptions(pp: PP): PPP;
+    onOptions(self: this): PAP;
 
-    onIntersecting(pp: PP): void;
+    onIntersecting(self: this): void;
 
-    onNotIntersecting(pp: PP): void;
+    onNotIntersecting(self: this): void;
 
-    onIntersectingChange(pp: PP): void;
+    onIntersectingChange(self: this): void;
 
-    onNotIntersectingEcho(pp: PP): void;
+    onNotIntersectingEcho(self: this): void;
 
-    finale(proxy: Proxy, target: Element, beDecorProps: BeDecoratedProps): void;
+    //finale(proxy: Proxy, target: Element, beDecorProps: BeDecoratedProps): void;
 
 
     
