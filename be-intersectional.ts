@@ -89,7 +89,7 @@ export const actions = {
     }
 } as Partial<{[key in keyof Actions ]: Action<AP > | keyof AP}>;
 
-export const proxyPropDefaults = {
+export const propDefaults = {
     options: {
         threshold: 0,
         rootMargin: '0px',

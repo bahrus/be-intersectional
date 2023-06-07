@@ -70,7 +70,7 @@ export const actions = {
         ifKeyIn: ['isIntersectingEcho']
     }
 };
-export const proxyPropDefaults = {
+export const propDefaults = {
     options: {
         threshold: 0,
         rootMargin: '0px',
