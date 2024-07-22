@@ -31,8 +31,7 @@
   },
   "dependencies": {
     "be-enhanced": "0.0.27",
-    "trans-render": "0.0.685",
-    "xtal-element": "0.0.565"
+    "trans-render": "0.0.685"
   },
   "devDependencies": {
     "@playwright/test": "1.34.3",

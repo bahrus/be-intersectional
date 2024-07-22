@@ -6,7 +6,7 @@
 		"experimentalDecorators": false,
 		"newLine": "LF",
 		"strict": true,
-		"watch": true
+		"skipLibCheck": true
 	},
 	"files": [
 		"be-intersectional.ts",

@@ -1,12 +1,12 @@
 import { BE } from 'be-enhanced/BE.js';
-class BeIntersectional extends BE {
+export class BeIntersectional extends BE {
     #observer;
     #echoTimeout;
     onOptions(self) {
         this.disconnect();
         const { rootClosest, observeClosest, options, enhancedElement, enterDelay } = self;
         if (rootClosest !== undefined) {
-            const root = enhancedElement.closest(rootClosest);
+            const root = self.closest(rootClosest);
             if (root === null) {
                 throw '404';
             }
@@ -45,5 +45,36 @@ class BeIntersectional extends BE {
             clearTimeout(this.#echoTimeout);
         }
     }
+    onIntersectingChange(self) {
+        self.isNotIntersecting = !this.isIntersecting;
+    }
+    onNotIntersectingEcho(self) {
+        this.isNotIntersectingEcho = !this.isIntersectingEcho;
+    }
+    detach(detachedElement) {
+        this.disconnect();
+    }
 }
-export { BeIntersectional };
+export const actions = {
+    onOptions: 'options',
+    onIntersecting: {
+        ifAllOf: ['isIntersecting', 'isIntersectingEcho'],
+    },
+    onIntersectingChange: {
+        ifKeyIn: ['isIntersecting']
+    },
+    onNotIntersecting: {
+        ifAllOf: ['isNotIntersecting', 'isNotIntersectingEcho'],
+    },
+    onNotIntersectingEcho: {
+        ifKeyIn: ['isIntersectingEcho']
+    }
+};
+export const propDefaults = {
+    options: {
+        threshold: 0,
+        rootMargin: '0px',
+    },
+    enterDelay: 16,
+    exitDelay: 16,
+};

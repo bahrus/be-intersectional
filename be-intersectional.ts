@@ -1,17 +1,16 @@
-import {BE} from 'be-enhanced/BE.js';
-import {Actions, AllProps, AP, PAP, ProPAP, POA} from './types';
-import {Action} from 'trans-render/lib/types';
+import { BEAllProps, IEnhancement } from 'trans-render/be/types';
+import {AP, Actions, PAP} from './types';
+import {BE, BEConfig} from 'be-enhanced/BE.js';
 
-export abstract class BeIntersectional extends BE<AP, Actions> implements Actions{
+class BeIntersectional extends BE implements Actions{
+
     #observer: IntersectionObserver | undefined;
-
-    #echoTimeout: string | number | NodeJS.Timeout | undefined;
-
+    #echoTimeout: number | undefined;
     onOptions(self: this): PAP {
         this.disconnect();
         const {rootClosest, observeClosest, options, enhancedElement, enterDelay} = self;
         if(rootClosest !== undefined){
-            const root = self.closest(rootClosest);
+            const root = enhancedElement.closest(rootClosest);
             if(root === null){
                 throw '404';
             }
@@ -51,50 +50,9 @@ export abstract class BeIntersectional extends BE<AP, Actions> implements Action
             clearTimeout(this.#echoTimeout);
         }
     }
-
-    abstract onIntersecting(self: this): void;
-
-    abstract onNotIntersecting(self: this): void;
-
-    onIntersectingChange(self: this): void {
-        self.isNotIntersecting = !this.isIntersecting;
-    }
-
-    onNotIntersectingEcho(self: this): void {
-        this.isNotIntersectingEcho = !this.isIntersectingEcho;
-    }
-
-    override detach(detachedElement: Element): void {
-        this.disconnect();
-    }
-
-
 }
 
-export interface BeIntersectional extends AllProps{}
+interface BeIntersectional extends AP{}
 
-export const actions = {
-    onOptions: 'options',
-    onIntersecting: {
-        ifAllOf: ['isIntersecting', 'isIntersectingEcho'],
-    },
-    onIntersectingChange:{
-        ifKeyIn: ['isIntersecting']
-    },
-    onNotIntersecting: {
-        ifAllOf: ['isNotIntersecting', 'isNotIntersectingEcho'],
-    },
-    onNotIntersectingEcho: {
-        ifKeyIn: ['isIntersectingEcho']
-    }
-} as Partial<{[key in keyof Actions ]: Action<AP > | keyof AP}>;
-
-export const propDefaults = {
-    options: {
-        threshold: 0,
-        rootMargin: '0px',
-    },
-    enterDelay: 16,
-    exitDelay: 16,
-} as AP;
+export {BeIntersectional}
 

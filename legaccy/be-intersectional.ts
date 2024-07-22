@@ -1,13 +1,15 @@
-import {BeDecoratedProps} from 'be-decorated/types.js';
-import {Actions, VirtualProps, PP, Proxy, PPP} from './types';
-import {RenderContext, Action} from 'trans-render/lib/types';
+import {BE} from 'be-enhanced/BE.js';
+import {Actions, AllProps, AP, PAP, ProPAP, POA} from './types';
+import {Action} from 'trans-render/lib/types';
 
-export abstract class BeIntersectional extends EventTarget implements Actions {
+export abstract class BeIntersectional extends BE<AP, Actions> implements Actions{
     #observer: IntersectionObserver | undefined;
 
     #echoTimeout: string | number | NodeJS.Timeout | undefined;
-    onOptions({options, proxy, enterDelay, rootClosest, observeClosest, self}: PP) {
+
+    onOptions(self: this): PAP {
         this.disconnect();
+        const {rootClosest, observeClosest, options, enhancedElement, enterDelay} = self;
         if(rootClosest !== undefined){
             const root = self.closest(rootClosest);
             if(root === null){
@@ -15,18 +17,18 @@ export abstract class BeIntersectional extends EventTarget implements Actions {
             }
             options!.root = root;
         }
-        let targetToObserve = self;
+        let targetToObserve = enhancedElement;
         if(observeClosest !== undefined){
-            targetToObserve = self.closest(observeClosest)!;
+            targetToObserve = enhancedElement.closest(observeClosest)!;
         }
         const observer = new IntersectionObserver((entries: IntersectionObserverEntry[], observer: IntersectionObserver) => {
             for(const entry of entries){
                 const intersecting = entry.isIntersecting;
-                proxy.isIntersecting = intersecting;
+                self.isIntersecting = intersecting;
                 clearTimeout(this.#echoTimeout);
                 this.#echoTimeout = setTimeout(() => {
                     try{
-                        proxy.isIntersectingEcho = intersecting;//sometimes proxy is revoked
+                        self.isIntersectingEcho = intersecting;//sometimes proxy is revoked
                     }catch(e){}
                 }, enterDelay); 
             }
@@ -34,10 +36,10 @@ export abstract class BeIntersectional extends EventTarget implements Actions {
         setTimeout(() => {
             observer.observe(targetToObserve);
         }, enterDelay);
-        this.#observer = observer;
+        self.#observer = observer;
         return {
             resolved: true
-        } as PPP;
+        } as PAP;
         
     }
 
@@ -50,23 +52,26 @@ export abstract class BeIntersectional extends EventTarget implements Actions {
         }
     }
 
-    abstract onIntersecting(bip: PP): void;
+    abstract onIntersecting(self: this): void;
 
-    abstract onNotIntersecting(bip: PP): void;
+    abstract onNotIntersecting(self: this): void;
 
-    onIntersectingChange({isIntersecting, proxy}: PP){
-        proxy.isNotIntersecting = !isIntersecting;
+    onIntersectingChange(self: this): void {
+        self.isNotIntersecting = !this.isIntersecting;
     }
 
-    onNotIntersectingEcho({isIntersectingEcho, proxy}: PP): void {
-        proxy.isNotIntersectingEcho = !isIntersectingEcho;
+    onNotIntersectingEcho(self: this): void {
+        this.isNotIntersectingEcho = !this.isIntersectingEcho;
     }
 
-    finale(proxy: Proxy, target: Element, beDecorProps: BeDecoratedProps<any, any>): void {
+    override detach(detachedElement: Element): void {
         this.disconnect();
     }
 
+
 }
+
+export interface BeIntersectional extends AllProps{}
 
 export const actions = {
     onOptions: 'options',
@@ -82,14 +87,14 @@ export const actions = {
     onNotIntersectingEcho: {
         ifKeyIn: ['isIntersectingEcho']
     }
-} as Partial<{[key in keyof Actions ]: Action<VirtualProps > | keyof VirtualProps}>;
+} as Partial<{[key in keyof Actions ]: Action<AP > | keyof AP}>;
 
-export const proxyPropDefaults = {
+export const propDefaults = {
     options: {
         threshold: 0,
         rootMargin: '0px',
     },
     enterDelay: 16,
     exitDelay: 16,
-} as VirtualProps;
+} as AP;
 
