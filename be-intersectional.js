@@ -23,6 +23,7 @@ class BeIntersectional extends BE {
                 clearTimeout(this.#echoTimeout);
                 this.#echoTimeout = setTimeout(() => {
                     try {
+                        //note -- no more proxy, so maybe the try catch is overkill now
                         self.isIntersectingEcho = intersecting; //sometimes proxy is revoked
                     }
                     catch (e) { }
