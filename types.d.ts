@@ -18,5 +18,13 @@ export type PAP = Partial<AP>;
 export type ProPAP = Promise<PAP>;
 
 export interface Actions{
+    onOptions(self: this): PAP;
+    
+    onIntersecting(self: this): void;
 
+    onNotIntersecting(self: this): void;
+
+    onIntersectingChange(self: this): void;
+
+    onNotIntersectingEcho(self: this): void;
 }

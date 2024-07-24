@@ -2,7 +2,7 @@ import { BEAllProps, IEnhancement } from 'trans-render/be/types';
 import {AP, Actions, PAP} from './types';
 import {BE, BEConfig} from 'be-enhanced/BE.js';
 
-class BeIntersectional extends BE implements Actions{
+abstract class BeIntersectional extends BE implements Actions{
 
     #observer: IntersectionObserver | undefined;
     #echoTimeout: number | undefined;
@@ -49,6 +49,22 @@ class BeIntersectional extends BE implements Actions{
         if(this.#echoTimeout){
             clearTimeout(this.#echoTimeout);
         }
+    }
+
+    abstract onIntersecting(self: this): void;
+
+    abstract onNotIntersecting(self: this): void;
+
+    onIntersectingChange(self: this): void {
+        self.isNotIntersecting = !this.isIntersecting;
+    }
+
+    onNotIntersectingEcho(self: this): void {
+        this.isNotIntersectingEcho = !this.isIntersectingEcho;
+    }
+
+    override async detach(el: Element) {
+        this.disconnect();
     }
 }
 

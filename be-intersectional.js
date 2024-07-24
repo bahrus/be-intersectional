@@ -45,5 +45,14 @@ class BeIntersectional extends BE {
             clearTimeout(this.#echoTimeout);
         }
     }
+    onIntersectingChange(self) {
+        self.isNotIntersecting = !this.isIntersecting;
+    }
+    onNotIntersectingEcho(self) {
+        this.isNotIntersectingEcho = !this.isIntersectingEcho;
+    }
+    async detach(el) {
+        this.disconnect();
+    }
 }
 export { BeIntersectional };
