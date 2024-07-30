@@ -1,4 +1,10 @@
+// @ts-check
 import { BE } from 'be-enhanced/BE.js';
+/** @import {Actions, PAP, AllProps, AP, IntersectionalActions} from './types.d.ts' */;
+
+/**
+ * @implements {IntersectionalActions}
+ */
 class BeIntersectional extends BE {
     #observer;
     #echoTimeout;
@@ -46,12 +52,12 @@ class BeIntersectional extends BE {
             clearTimeout(this.#echoTimeout);
         }
     }
-    onIntersectingChange(self) {
-        self.isNotIntersecting = !this.isIntersecting;
-    }
-    onNotIntersectingEcho(self) {
-        this.isNotIntersectingEcho = !this.isIntersectingEcho;
-    }
+    // onIntersectingChange(self) {
+    //     self.isNotIntersecting = !self.isIntersecting;
+    // }
+    // onNotIntersectingEcho(self) {
+    //     self.isNotIntersectingEcho = !self.isIntersectingEcho;
+    // }
     async detach(el) {
         this.disconnect();
     }

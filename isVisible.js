@@ -1,13 +1,21 @@
+// @ts-check
+/**
+ * 
+ * @param {HTMLElement} elem 
+ * @returns 
+ */
 export function isVisible(elem) {
     //https://stackoverflow.com/questions/19669786/check-if-element-is-visible-in-dom
     if (!(elem instanceof Element))
         throw Error('DomUtil: elem is not an element.');
     const style = getComputedStyle(elem);
-    if (style.display === 'none')
+    const {display, visibility, opacity} = style
+    if (display === 'none')
         return false;
-    if (style.visibility !== 'visible')
+    if (visibility !== 'visible')
         return false;
-    if (style.opacity < 0.1)
+    
+    if (typeof opacity === 'number' && opacity < 0.1)
         return false;
     if (elem.offsetWidth + elem.offsetHeight + elem.getBoundingClientRect().height +
         elem.getBoundingClientRect().width === 0) {
@@ -25,7 +33,7 @@ export function isVisible(elem) {
         return false;
     if (elemCenter.y > (document.documentElement.clientHeight || window.innerHeight))
         return false;
-    const root = elem.getRootNode();
+    const root = /** @type {Document | ShadowRoot | HTMLElement} */ (elem.getRootNode());
     let pointContainer = root.elementFromPoint(elemCenter.x, elemCenter.y);
     do {
         if (pointContainer === elem)
