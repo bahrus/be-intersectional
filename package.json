@@ -31,8 +31,8 @@
     "url": "git+https://github.com/bahrus/be-intersectional.git"
   },
   "dependencies": {
-    "be-enhanced": "0.0.114",
-    "trans-render": "0.0.801"
+    "be-enhanced": "0.0.118",
+    "trans-render": "0.0.805"
   },
   "devDependencies": {
     "@playwright/test": "1.45.3",
