@@ -11,9 +11,9 @@
     "custom-elements"
   ],
   "scripts": {
-    "serve": "node node_modules/may-it-serve",
+    "serve": "node ./node_modules/spa-ssi/serve.js",
     "test": "playwright test",
-    "safari": "npx playwright wk http://localhost:3030",
+    "safari": "npx playwright wk http://localhost:8000",
     "update": "ncu -u && npm install"
   },
   "files": [
@@ -31,12 +31,12 @@
     "url": "git+https://github.com/bahrus/be-intersectional.git"
   },
   "dependencies": {
-    "be-enhanced": "0.0.118",
-    "trans-render": "0.0.805"
+    "be-enhanced": "0.0.189",
+    "trans-render": "0.0.960"
   },
   "devDependencies": {
-    "@playwright/test": "1.45.3",
-    "may-it-serve": "0.0.8"
+    "@playwright/test": "1.55.1",
+    "spa-ssi": "0.0.23"
   },
   "author": "anderson.bruce.b@gmail.com",
   "license": "MIT",
