@@ -1,7 +1,7 @@
 {
   "name": "be-intersectional",
   "version": "0.0.77",
-  "description": "",
+  "description": "be-intersectional provides a base class for be-decorated behaviors / decorators that behave according to visibility.",
   "main": "be-intersectional.js",
   "module": "be-intersectional.js",
   "keywords": [
@@ -18,14 +18,15 @@
   },
   "files": [
     "*.js",
-    "types.d.ts"
+    "./ts-refs/be-enhanced/*.*",
+    "./ts-refs/be-intersectional/*.*"
   ],
   "exports": {
     ".": "./be-intersectional.js",
     "./be-intersectional.js": "./be-intersectional.js",
     "./isVisible.js": "./isVisible.js"
   },
-  "types": "types.d.ts",
+  "types": "./ts-refs/be-intersectional/types.d.ts",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/bahrus/be-intersectional.git"
